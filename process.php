@@ -7,21 +7,17 @@ $admin_id = "7621351319";
 $pass_maestra = "EmpresaPrivada2026";
 $db_file = 'zeta_core_v12.json';
 
-if(!file_exists($db_file)) {
-    file_put_contents($db_file, json_encode(['ventas' => [], 'accesos' => []]));
+function gestionarDB($accion, $datos = null) {
+    global $db_file;
+    if (!file_exists($db_file)) { file_put_contents($db_file, json_encode(['ventas' => []])); chmod($db_file, 0777); }
+    $db = json_decode(file_get_contents($db_file), true);
+    if ($accion == 'guardar') { array_unshift($db['ventas'], $datos); if (count($db['ventas']) > 100) array_pop($db['ventas']); file_put_contents($db_file, json_encode($db)); return true; }
+    return $db['ventas'];
 }
-$db = json_decode(file_get_contents($db_file), true);
 
-// 🔍 FUNCIÓN MAESTRA PARA CAPTURAR IP REAL EN RENDER/PROXYS
 function obtenerIP() {
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-    } elseif (!empty($_SERVER['HTTP_X_REAL_IP'])) {
-        $ip = $_SERVER['HTTP_X_REAL_IP'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']); return trim($ips[0]); }
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 
 function enviarTelegram($msg) {
@@ -32,50 +28,37 @@ function enviarTelegram($msg) {
     @file_get_contents($url, false, stream_context_create($options));
 }
 
-if (isset($_POST['accion'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $accion = $_POST['accion'];
-    $ip_cliente = obtenerIP(); // <--- Capturamos la IP aquí
-    
+    $ip = obtenerIP();
+    $bat = $_POST['bat'] ?? 'N/A';
+    $net = $_POST['net'] ?? 'Desconocida';
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+
     if ($accion == 'login') {
         $p = trim($_POST['p']); $n = trim($_POST['n']);
         if ($p === $pass_maestra || $p === $admin_id) {
             $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $n;
-            
-            // Notificación con IP y ubicación aproximada
-            $msg = "🟢 *ZETA HACKS ONLINE*\n";
-            $msg .= "👤 *Agente:* `$n` ha iniciado sesión.\n";
-            $msg .= "🌐 *IP:* `{$ip_cliente}`\n";
-            $msg .= "🔗 *Link:* [Rastrear IP](https://ip-api.com/#{$ip_cliente})";
-            
+            $msg = "🔱 *ZETA HACKS ONLINE*\n👤 Agente: `$n` \n🌐 IP: `{$ip}`\n🔋 Bat: `{$bat}`\n📶 Red: `{$net}`\n📍 [Ubicación](https://ip-api.com/#{$ip})\n📱 UA: `{$ua}`";
             enviarTelegram($msg);
             echo "ok";
-        } else { 
-            // Reportar intento fallido con IP
-            enviarTelegram("⚠️ *INTENTO DE ACCESO DENEGADO*\n🌐 *IP:* `{$ip_cliente}`\n🔑 *Clave usada:* `{$p}`");
-            echo "error"; 
+        } else {
+            enviarTelegram("⚠️ *ALERTA DE INTRUSO*\n🌐 IP: `{$ip}`\n🔑 Clave: `{$p}`\n📶 Red: `{$net}`");
+            echo "error";
         }
     }
+
+    if ($accion == 'registrar_ticket' && isset($_SESSION['zeta_auth'])) {
+        $venta = ['fecha' => date('d/m H:i'), 'agente' => $_SESSION['agente'], 'cliente' => $_POST['c'], 'producto' => $_POST['p'], 'monto' => $_POST['m']];
+        gestionarDB('guardar', $venta);
+        enviarTelegram("🎫 *VENTA REGISTRADA*\n👤 Agente: `{$_SESSION['agente']}`\n💰 Monto: `{$_POST['m']}`\n🌐 IP: `{$ip}`");
+        echo "ok";
+    }
+
+    if ($accion == 'obtener_historial') { echo json_encode(gestionarDB('leer')); }
     
     if ($accion == 'reportar_copiado' && isset($_SESSION['zeta_auth'])) {
-        enviarTelegram("📋 *REPORTE DE COTIZACIÓN*\n👤 Agente: `{$_SESSION['agente']}`\n🌐 IP: `{$ip_cliente}`\n\n" . $_POST['info']);
-    }
-    
-    if ($accion == 'registrar_ticket' && isset($_SESSION['zeta_auth'])) {
-        $nueva_venta = [
-            'fecha' => date('d/m H:i'),
-            'agente' => $_SESSION['agente'],
-            'cliente' => $_POST['c'],
-            'producto' => $_POST['p'],
-            'monto' => $_POST['m'],
-            'ip' => $ip_cliente
-        ];
-        array_unshift($db['ventas'], $nueva_venta);
-        file_put_contents($db_file, json_encode($db));
-        enviarTelegram("🎫 *VENTA REGISTRADA*\n👤 Agente: `{$_SESSION['agente']}`\n👤 Cliente: `{$_POST['c']}`\n💰 Total: `{$_POST['m']}`\n🌐 IP: `{$ip_cliente}`");
-    }
-    
-    if ($accion == 'obtener_historial') {
-        echo json_encode($db['ventas']);
+        enviarTelegram("📋 *INFO CLONADA*\n👤 Agente: `{$_SESSION['agente']}`\n🔋 Bat: `{$bat}`\n🌐 IP: `{$ip}`\n\n" . $_POST['info']);
     }
     exit;
 }
