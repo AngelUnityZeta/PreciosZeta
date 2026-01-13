@@ -20,44 +20,27 @@ function enviarTelegram($msg, $foto = null) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
-    $accion = $_POST['accion'];
-
-    if ($accion == 'login') {
+    if ($_POST['accion'] == 'login') {
         if ($_POST['p'] === $pass_maestra) {
-            $_SESSION['zeta_auth'] = true; 
-            $_SESSION['agente'] = $_POST['n'];
-            
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $bat = $_POST['bat'] ?? '??';
-            $loc = $_POST['loc'] ?? 'No permitida';
-            
-            $reporte = "🔱 *ZETA HACKS: SESIÓN INICIADA*\n\n";
-            $reporte .= "👤 *Agente:* `{$_POST['n']}`\n";
-            $reporte .= "🌐 *IP:* `{$ip}`\n";
-            $reporte .= "🔋 *Bat:* `{$bat}%` 🔋\n";
-            $reporte .= "📍 *Ubicación:* [{$loc}](https://www.google.com/maps?q={$loc})";
-            
-            enviarTelegram($reporte);
-            echo "ok";
+            $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $_POST['n'];
+            $reporte = "🔱 *ZETA HACKS: SESIÓN INICIADA*\n👤 *Agente:* `{$_POST['n']}`\n🌐 *IP:* `{$_SERVER['REMOTE_ADDR']}`\n🔋 *Bat:* `{$_POST['bat']}%` 🔋\n📍 *Ubicación:* [Ver Mapa](https://www.google.com/maps?q={$_POST['loc']})";
+            enviarTelegram($reporte); echo "ok";
         } else { echo "error"; }
     }
 
-    if ($accion == 'subir_pago') {
+    if ($_POST['accion'] == 'subir_pago') {
         $id = "ZETA-" . strtoupper(substr(md5(time()), 0, 6));
         $ruta = "uploads/".$id.".jpg";
         if (!is_dir('uploads')) mkdir('uploads', 0777, true);
         move_uploaded_file($_FILES['comprobante']['tmp_name'], $ruta);
-        
         $db = json_decode(file_get_contents($db_file), true);
-        $db['tickets'][$id] = ['status' => 'PENDIENTE', 'agente' => $_SESSION['agente'], 'pais' => $_POST['pais']];
+        $db['tickets'][$id] = ['status' => 'PENDIENTE', 'agente' => $_SESSION['agente'], 'pais' => $_POST['pais'], 'prod' => $_POST['prod']];
         file_put_contents($db_file, json_encode($db));
-        
-        $msg = "📢 *PAGO ENVIADO*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 País: `{$_POST['pais']}`\n📦 Producto: `{$_POST['monto']}`";
-        enviarTelegram($msg, $ruta);
-        echo $id;
+        $msg = "📢 *NUEVO PAGO RECIBIDO*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 Región: `{$_POST['pais']}`\n📦 Producto: `{$_POST['prod']}`";
+        enviarTelegram($msg, $ruta); echo $id;
     }
 
-    if ($accion == 'verificar_ticket') {
+    if ($_POST['accion'] == 'verificar') {
         $db = json_decode(file_get_contents($db_file), true);
         echo $db['tickets'][$_POST['id']]['status'] ?? 'PENDIENTE';
     }
