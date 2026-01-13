@@ -11,21 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         if ($_POST['p'] === $pass_maestra) {
             $_SESSION['zeta_auth'] = true; 
             $_SESSION['agente'] = $_POST['n'];
-            
-            // Envío a Telegram sin que el usuario espere
             $ip = $_SERVER['REMOTE_ADDR'];
-            $msg = "🔱 *ZETA HACKS ACCESO*\n👤 Agente: `{$_POST['n']}`\n🌐 IP: `{$ip}`";
-            $url = "https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown";
-            
-            // Esto envía el mensaje en segundo plano para no trabar la web
-            file_get_contents($url);
-            
+            $msg = "🔱 *ZETA HACKS: ACCESO CONCEDIDO*\n👤 Agente: `{$_POST['n']}`\n🌐 IP: `{$ip}`\n📅 Fecha: ".date('d/m/Y H:i');
+            file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown");
             echo "ok";
-        } else {
-            echo "error";
-        }
+        } else { echo "error"; }
     }
     exit;
 }
 ?>
-    
