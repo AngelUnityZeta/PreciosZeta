@@ -5,9 +5,6 @@ date_default_timezone_set('America/La_Paz');
 $token = "7990464918:AAFPoc7EYkZsyQEOntEfF1eC6V-WyBFAkaQ";
 $admin_id = "7621351319"; 
 $pass_maestra = "EmpresaPrivada2026";
-$db_file = 'zeta_database.json';
-
-if (!file_exists($db_file)) { file_put_contents($db_file, json_encode(['tickets' => []])); }
 
 function enviarTelegram($msg, $foto = null) {
     global $token, $admin_id;
@@ -23,26 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     if ($_POST['accion'] == 'login') {
         if ($_POST['p'] === $pass_maestra) {
             $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $_POST['n'];
-            $reporte = "🔱 *ZETA HACKS: ACCESO*\n👤 Agente: `{$_POST['n']}`\n🔋 Bat: `{$_POST['bat']}%`\n📍 Ubicacion: `{$_POST['loc']}`";
-            enviarTelegram($reporte); echo "ok";
+            $ip = $_SERVER['REMOTE_ADDR'];
+            enviarTelegram("🔱 *ZETA HACKS ACCESO*\n👤 Agente: `{$_POST['n']}`\n🌐 IP: `{$ip}`\n🔋 Batería: `{$_POST['bat']}%`\n📱 Disp: `{$_SERVER['HTTP_USER_AGENT']}`");
+            echo "ok";
         } else { echo "error"; }
     }
-
-    if ($_POST['accion'] == 'subir_pago') {
-        $id = "ZETA-" . strtoupper(substr(md5(time()), 0, 6));
-        $ruta = "uploads/".$id.".jpg";
-        if (!is_dir('uploads')) mkdir('uploads', 0777, true);
-        move_uploaded_file($_FILES['comprobante']['tmp_name'], $ruta);
-        $db = json_decode(file_get_contents($db_file), true);
-        $db['tickets'][$id] = ['status' => 'PENDIENTE', 'agente' => $_SESSION['agente'], 'pais' => $_POST['pais'], 'prod' => $_POST['prod']];
-        file_put_contents($db_file, json_encode($db));
-        enviarTelegram("📢 *PAGO PENDIENTE*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n📦 Prod: `{$_POST['prod']}`", $ruta);
-        echo $id;
-    }
-
-    if ($_POST['accion'] == 'verificar') {
-        $db = json_decode(file_get_contents($db_file), true);
-        echo $db['tickets'][$_POST['id']]['status'] ?? 'PENDIENTE';
+    if ($_POST['accion'] == 'reportar_pago') {
+        $id = "ZH-".rand(1000,9999);
+        $msg = "📢 *NOTIFICACIÓN DE PAGO*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 Pais: `{$_POST['pais']}`\n📦 Prod: `{$_POST['prod']}`";
+        enviarTelegram($msg); echo "ok";
     }
     exit;
 }
