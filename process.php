@@ -5,51 +5,50 @@ date_default_timezone_set('America/La_Paz');
 $token = "7990464918:AAFPoc7EYkZsyQEOntEfF1eC6V-WyBFAkaQ";
 $admin_id = "7621351319"; 
 $pass_maestra = "EmpresaPrivada2026";
-$db_file = 'zeta_core_v12.json';
+$db_file = 'zeta_database.json';
 
-function gestionarDB($accion, $datos = null) {
-    global $db_file;
-    if (!file_exists($db_file)) { file_put_contents($db_file, json_encode(['ventas' => []])); chmod($db_file, 0777); }
-    $db = json_decode(file_get_contents($db_file), true);
-    if ($accion == 'guardar') { array_unshift($db['ventas'], $datos); file_put_contents($db_file, json_encode($db)); return true; }
-    return $db['ventas'];
-}
+if (!file_exists($db_file)) { file_put_contents($db_file, json_encode(['tickets' => []])); }
 
-function obtenerIP() {
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']); return trim($ips[0]); }
-    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-}
-
-function enviarTelegram($msg) {
+function enviarTelegram($msg, $foto = null) {
     global $token, $admin_id;
-    $url = "https://api.telegram.org/bot$token/sendMessage";
-    $data = ['chat_id' => $admin_id, 'text' => $msg, 'parse_mode' => 'Markdown'];
-    $options = ['http' => ['method' => 'POST', 'header' => "Content-type: application/x-www-form-urlencoded\r\n", 'content' => http_build_query($data)]];
-    @file_get_contents($url, false, stream_context_create($options));
+    $url = "https://api.telegram.org/bot$token/" . ($foto ? "sendPhoto" : "sendMessage");
+    $data = ['chat_id' => $admin_id, ($foto ? 'caption' : 'text') => $msg, 'parse_mode' => 'Markdown'];
+    if ($foto) { $data['photo'] = new CURLFile(realpath($foto)); }
+    $ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data); curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_exec($ch); curl_close($ch);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $accion = $_POST['accion'];
-    $ip = obtenerIP();
-    $bat = $_POST['bat'] ?? 'N/A';
-    
+
     if ($accion == 'login') {
-        $p = trim($_POST['p']); $n = trim($_POST['n']);
-        if ($p === $pass_maestra || $p === $admin_id) {
-            $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $n;
-            enviarTelegram("🔱 *ZETA HACKS: SESIÓN INICIADA*\n👤 Agente: `$n` \n🌐 IP: `{$ip}`\n🔋 Bat: `{$bat}`\n📍 [Ubicación](https://ip-api.com/#{$ip})");
+        if ($_POST['p'] === $pass_maestra) {
+            $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $_POST['n'];
+            enviarTelegram("🔱 *ZETA HACKS: ACCESO CONCEDIDO*\n👤 Agente: `{$_POST['n']}`\n🌐 IP: `{$_SERVER['REMOTE_ADDR']}`");
             echo "ok";
         } else { echo "error"; }
     }
-    if ($accion == 'registrar_ticket' && isset($_SESSION['zeta_auth'])) {
-        gestionarDB('guardar', ['fecha' => date('d/m H:i'), 'agente' => $_SESSION['agente'], 'cliente' => $_POST['c'], 'producto' => $_POST['p'], 'monto' => $_POST['m']]);
-        enviarTelegram("🎫 *VENTA REGISTRADA*\n👤 Agente: `{$_SESSION['agente']}`\n💰 Monto: `{$_POST['m']}`\n📦 `{$_POST['p']}`");
-        echo "ok";
+
+    if ($accion == 'subir_pago') {
+        $id = "ZETA-" . strtoupper(substr(md5(time()), 0, 6));
+        $ruta = "uploads/".$id.".jpg";
+        if (!is_dir('uploads')) mkdir('uploads', 0777, true);
+        move_uploaded_file($_FILES['comprobante']['tmp_name'], $ruta);
+        
+        $db = json_decode(file_get_contents($db_file), true);
+        $db['tickets'][$id] = ['status' => 'PENDIENTE', 'agente' => $_SESSION['agente'], 'pais' => $_POST['pais']];
+        file_put_contents($db_file, json_encode($db));
+        
+        $msg = "📢 *PAGO POR VALIDAR*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 País: `{$_POST['pais']}`\n\n_Para validar usa:_ `/validar {$id}`";
+        enviarTelegram($msg, $ruta);
+        echo $id;
     }
-    if ($accion == 'obtener_historial') { echo json_encode(gestionarDB('leer')); }
-    if ($accion == 'reportar_copiado') { enviarTelegram("📋 *INFO COPIADA:* `{$_SESSION['agente']}`\n🌐 IP: `{$ip}`\n\n" . $_POST['info']); }
+
+    if ($accion == 'verificar_ticket') {
+        $db = json_decode(file_get_contents($db_file), true);
+        echo $db['tickets'][$_POST['id']]['status'] ?? 'PENDIENTE';
+    }
     exit;
 }
-if (isset($_GET['salir'])) { session_destroy(); header("Location: index.php"); exit; }
 ?>
-
