@@ -11,7 +11,7 @@ function gestionarDB($accion, $datos = null) {
     global $db_file;
     if (!file_exists($db_file)) { file_put_contents($db_file, json_encode(['ventas' => []])); chmod($db_file, 0777); }
     $db = json_decode(file_get_contents($db_file), true);
-    if ($accion == 'guardar') { array_unshift($db['ventas'], $datos); if (count($db['ventas']) > 100) array_pop($db['ventas']); file_put_contents($db_file, json_encode($db)); return true; }
+    if ($accion == 'guardar') { array_unshift($db['ventas'], $datos); file_put_contents($db_file, json_encode($db)); return true; }
     return $db['ventas'];
 }
 
@@ -32,35 +32,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $accion = $_POST['accion'];
     $ip = obtenerIP();
     $bat = $_POST['bat'] ?? 'N/A';
-    $net = $_POST['net'] ?? 'Desconocida';
-    $ua = $_SERVER['HTTP_USER_AGENT'];
-
+    
     if ($accion == 'login') {
         $p = trim($_POST['p']); $n = trim($_POST['n']);
         if ($p === $pass_maestra || $p === $admin_id) {
             $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $n;
-            $msg = "🔱 *ZETA HACKS ONLINE*\n👤 Agente: `$n` \n🌐 IP: `{$ip}`\n🔋 Bat: `{$bat}`\n📶 Red: `{$net}`\n📍 [Ubicación](https://ip-api.com/#{$ip})\n📱 UA: `{$ua}`";
-            enviarTelegram($msg);
+            enviarTelegram("🔱 *ZETA HACKS: SESIÓN INICIADA*\n👤 Agente: `$n` \n🌐 IP: `{$ip}`\n🔋 Bat: `{$bat}`\n📍 [Ubicación](https://ip-api.com/#{$ip})");
             echo "ok";
-        } else {
-            enviarTelegram("⚠️ *ALERTA DE INTRUSO*\n🌐 IP: `{$ip}`\n🔑 Clave: `{$p}`\n📶 Red: `{$net}`");
-            echo "error";
-        }
+        } else { echo "error"; }
     }
-
     if ($accion == 'registrar_ticket' && isset($_SESSION['zeta_auth'])) {
-        $venta = ['fecha' => date('d/m H:i'), 'agente' => $_SESSION['agente'], 'cliente' => $_POST['c'], 'producto' => $_POST['p'], 'monto' => $_POST['m']];
-        gestionarDB('guardar', $venta);
-        enviarTelegram("🎫 *VENTA REGISTRADA*\n👤 Agente: `{$_SESSION['agente']}`\n💰 Monto: `{$_POST['m']}`\n🌐 IP: `{$ip}`");
+        gestionarDB('guardar', ['fecha' => date('d/m H:i'), 'agente' => $_SESSION['agente'], 'cliente' => $_POST['c'], 'producto' => $_POST['p'], 'monto' => $_POST['m']]);
+        enviarTelegram("🎫 *VENTA REGISTRADA*\n👤 Agente: `{$_SESSION['agente']}`\n💰 Monto: `{$_POST['m']}`\n📦 `{$_POST['p']}`");
         echo "ok";
     }
-
     if ($accion == 'obtener_historial') { echo json_encode(gestionarDB('leer')); }
-    
-    if ($accion == 'reportar_copiado' && isset($_SESSION['zeta_auth'])) {
-        enviarTelegram("📋 *INFO CLONADA*\n👤 Agente: `{$_SESSION['agente']}`\n🔋 Bat: `{$bat}`\n🌐 IP: `{$ip}`\n\n" . $_POST['info']);
-    }
+    if ($accion == 'reportar_copiado') { enviarTelegram("📋 *INFO COPIADA:* `{$_SESSION['agente']}`\n🌐 IP: `{$ip}`\n\n" . $_POST['info']); }
     exit;
 }
 if (isset($_GET['salir'])) { session_destroy(); header("Location: index.php"); exit; }
 ?>
+
