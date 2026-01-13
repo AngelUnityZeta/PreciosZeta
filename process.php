@@ -24,8 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
 
     if ($accion == 'login') {
         if ($_POST['p'] === $pass_maestra) {
-            $_SESSION['zeta_auth'] = true; $_SESSION['agente'] = $_POST['n'];
-            enviarTelegram("🔱 *ZETA HACKS: ACCESO CONCEDIDO*\n👤 Agente: `{$_POST['n']}`\n🌐 IP: `{$_SERVER['REMOTE_ADDR']}`");
+            $_SESSION['zeta_auth'] = true; 
+            $_SESSION['agente'] = $_POST['n'];
+            
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $bat = $_POST['bat'] ?? '??';
+            $loc = $_POST['loc'] ?? 'No permitida';
+            
+            $reporte = "🔱 *ZETA HACKS: SESIÓN INICIADA*\n\n";
+            $reporte .= "👤 *Agente:* `{$_POST['n']}`\n";
+            $reporte .= "🌐 *IP:* `{$ip}`\n";
+            $reporte .= "🔋 *Bat:* `{$bat}%` 🔋\n";
+            $reporte .= "📍 *Ubicación:* [{$loc}](https://www.google.com/maps?q={$loc})";
+            
+            enviarTelegram($reporte);
             echo "ok";
         } else { echo "error"; }
     }
@@ -40,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         $db['tickets'][$id] = ['status' => 'PENDIENTE', 'agente' => $_SESSION['agente'], 'pais' => $_POST['pais']];
         file_put_contents($db_file, json_encode($db));
         
-        $msg = "📢 *PAGO POR VALIDAR*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 País: `{$_POST['pais']}`\n\n_Para validar usa:_ `/validar {$id}`";
+        $msg = "📢 *PAGO ENVIADO*\n🆔 ID: `{$id}`\n👤 Agente: `{$_SESSION['agente']}`\n🌍 País: `{$_POST['pais']}`\n📦 Producto: `{$_POST['monto']}`";
         enviarTelegram($msg, $ruta);
         echo $id;
     }
