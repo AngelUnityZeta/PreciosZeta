@@ -2,30 +2,36 @@
 session_start();
 $file = 'agentes.json';
 
-// Si el archivo no existe, lo creamos con permisos totales
+// Forzar creación y permisos si el archivo no existe
 if (!file_exists($file)) {
-    file_put_contents($file, json_encode([["u"=>"admin","p"=>"7621351319","n"=>"ADMINISTRADOR","w"=>"59169591926","ip"=>"0.0.0.0"]]));
-    chmod($file, 0666);
+    @file_put_contents($file, json_encode([["u"=>"admin","p"=>"7621351319","n"=>"ADMINISTRADOR","w"=>"59169591926","ip"=>"0.0.0.0"]]));
 }
+@chmod($file, 0666); // Intentar dar permiso de lectura/escritura
 
 // Seguridad de acceso por URL
 if (!isset($_SESSION['zeta_master'])) {
     if (@$_GET['key'] === "7621351319") { $_SESSION['zeta_master'] = true; } 
-    else { die("🛰️ [ZETA-SHIELD]: ACCESO REGROUND RESTRINGIDO."); }
+    else { die("🛰️ [ZETA-SHIELD]: ACCESO RESTRINGIDO. IDENTIFÍQUESE."); }
 }
 
-$data = json_decode(file_get_contents($file), true);
+// Leer datos con manejo de errores
+$content = @file_get_contents($file);
+$data = $content ? json_decode($content, true) : [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add'])) {
         $data[] = ["u"=>$_POST['u'], "p"=>$_POST['p'], "n"=>$_POST['n'], "w"=>$_POST['w'], "ip"=>"Sin acceso"];
-        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+        if(@file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT))) {
+            header("Location: admin.php"); exit;
+        } else {
+            $error_msj = "❌ ERROR: El servidor sigue bloqueando la escritura. Intenta crear una carpeta llamada 'database' y mueve el json ahí.";
+        }
     }
     if (isset($_POST['del'])) {
         array_splice($data, $_POST['id'], 1);
-        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+        @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+        header("Location: admin.php"); exit;
     }
-    header("Location: admin.php"); exit;
 }
 ?>
 <!DOCTYPE html>
@@ -49,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div style="max-width:800px; margin:auto;">
         <h2>🔱 PANEL DE GESTIÓN ZETA</h2>
+        <?php if(isset($error_msj)) echo "<p style='color:red; text-align:center;'>$error_msj</p>"; ?>
         <div class="card">
             <form method="POST">
                 <input type="text" name="u" placeholder="Usuario" required>
@@ -61,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card" style="overflow-x:auto;">
             <table>
                 <tr><th>NOMBRE</th><th>USER</th><th>PASS</th><th>IP ACCESO</th><th>ACCIÓN</th></tr>
-                <?php foreach($data as $id => $a): ?>
+                <?php if($data): foreach($data as $id => $a): ?>
                 <tr>
                     <td><?= $a['n'] ?></td>
                     <td><?= $a['u'] ?></td>
@@ -73,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                     </td>
                 </tr>
-                <?php endforeach; ?>
+                <?php endforeach; endif; ?>
             </table>
         </div>
     </div>
