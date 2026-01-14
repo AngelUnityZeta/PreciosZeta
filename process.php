@@ -1,7 +1,7 @@
 <?php
 session_start();
 date_default_timezone_set('America/La_Paz');
-
+$file = 'agentes.json';
 $token = "7990464918:AAFPoc7EYkZsyQEOntEfF1eC6V-WyBFAkaQ";
 $admin_id = "7621351319";
 
@@ -12,11 +12,14 @@ function getIP() {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $ip = getIP();
     
-    // LOGIN DINÁMICO DESDE JSON
     if ($_POST['accion'] == 'login') {
         $u = $_POST['u']; 
         $p = $_POST['p'];
-        $data = json_decode(file_get_contents('agentes.json'), true);
+        
+        // Verificamos permisos antes de leer
+        if(file_exists($file)) { chmod($file, 0666); }
+        
+        $data = json_decode(file_get_contents($file), true);
         $found = false;
 
         foreach ($data as $key => $a) {
@@ -24,13 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
                 $_SESSION['zeta_auth'] = true;
                 $_SESSION['agente'] = $a['n'];
                 
-                // Actualizar IP del agente en el JSON
+                // Guardar la IP del acceso
                 $data[$key]['ip'] = $ip;
-                file_put_contents('agentes.json', json_encode($data, JSON_PRETTY_PRINT));
+                @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
                 
-                // Notificar a tu Telegram
-                $msg = "🔱 *CONEXIÓN EXITOSA*\n👤 Agente: `{$a['n']}`\n🌐 IP: `{$ip}`\n📱 WA: `{$a['w']}`";
-                file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown");
+                $msg = "🔱 *LOGIN DETECTADO*\n👤 Agente: `{$a['n']}`\n🌐 IP: `{$ip}`";
+                @file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=".urlencode($msg)."&parse_mode=Markdown");
                 
                 echo "ok";
                 $found = true;
@@ -40,13 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         if(!$found) echo "error";
     }
     
-    // ENVÍO DE COMPROBANTES
     if ($_POST['accion'] == 'comprobante' && isset($_FILES['foto'])) {
         $ag = $_SESSION['agente'] ?? 'Desconocido';
         $post = [
             'chat_id' => $admin_id,
             'photo' => new CURLFile($_FILES['foto']['tmp_name']),
-            'caption' => "📄 *NUEVO COMPROBANTE*\n👤 Por: `{$ag}`\n🌐 IP: `{$ip}`",
+            'caption' => "📄 *PAGO RECIBIDO*\n👤 Agente: `{$ag}`\n🌐 IP: `{$ip}`",
             'parse_mode' => 'Markdown'
         ];
         $ch = curl_init("https://api.telegram.org/bot$token/sendPhoto");
@@ -57,4 +58,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     }
     exit;
 }
-
