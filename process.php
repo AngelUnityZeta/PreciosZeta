@@ -16,10 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         $u = $_POST['u']; 
         $p = $_POST['p'];
         
-        // Verificamos permisos antes de leer
-        if(file_exists($file)) { chmod($file, 0666); }
-        
-        $data = json_decode(file_get_contents($file), true);
+        @chmod($file, 0666);
+        $content = @file_get_contents($file);
+        $data = $content ? json_decode($content, true) : [];
         $found = false;
 
         foreach ($data as $key => $a) {
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
                 $_SESSION['zeta_auth'] = true;
                 $_SESSION['agente'] = $a['n'];
                 
-                // Guardar la IP del acceso
                 $data[$key]['ip'] = $ip;
                 @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
                 
@@ -58,3 +56,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     }
     exit;
 }
+
