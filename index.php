@@ -49,7 +49,7 @@
 
 <div id="bloqueo" style="display: <?= $auth ? 'none' : 'flex' ?>;">
     <div class="login-card">
-        <h2 style="font-family:'Orbitron'; color:var(--p); letter-spacing:3px;">ZETA HACKS</h2>
+        <h2 style="font-family:'Orbitron'; color:var(--p); letter-spacing:3px;">PRECIOS ZETA</h2>
         <p style="color:#555; font-size:0.7rem;">SISTEMA DE ACCESO RESTRINGIDO</p>
         <input type="text" id="m_u" class="z-input" placeholder="USUARIO">
         <input type="password" id="m_p" class="z-input" placeholder="CONTRASEÑA">
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<header><div style="font-family:'Orbitron'; font-weight:900; color:var(--p); font-size:1.4rem;">ZETA HACKS</div></header>
+<header><div style="font-family:'Orbitron'; font-weight:900; color:var(--p); font-size:1.4rem;">PRECIOS ZETA</div></header>
 
 <div id="p-home" class="container active">
     <div id="list-p"></div>
@@ -75,7 +75,7 @@
 const DB = {
     paises: [
         {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS", m:"💳 MERCADO PAGO Y UALA: 0000007900203350273548 | Alias: C.CORREA1315.UALA"},
-        {n:"BOLIVIA", b:"🇧🇴", t:14, c:"BS", m:"📌 QR SOPORTE\n💰 Tasa: 12.00 BS x 1 USD"},
+        {n:"BOLIVIA", b:"🇧🇴", t:12, c:"BS", m:"📌 QR SOPORTE\n💰 Tasa: 12.00 BS x 1 USD"},
         {n:"BRASIL", b:"🇧🇷", t:5.20, c:"BRL", m:"🟢 PIX: 91991076791"},
         {n:"CHILE", b:"🇨🇱", t:970, c:"CLP", m:"🏪 Banco Estado: 23710151\n👤 XAVIER FUENZALIDA"},
         {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP", m:"🟡 Bancolombia: 76900007797\n🔵 Nequi: 3001308078\n🟣 Nu Bank: @PMG3555"},
