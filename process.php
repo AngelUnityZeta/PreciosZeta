@@ -9,6 +9,7 @@ $admin_id = "7621351319";
 $agentes = [
     ["u" => "admin", "p" => "7621351319", "n" => "ZETA MASTER"],
     ["u" => "vendedor1", "p" => "zeta2026", "n" => "ALPHA_V"],
+     ["u" => "Zeta", "p" => "Vergon", "n" => "ZetaGay"],
     // Añade más aquí: ["u" => "usuario", "p" => "clave", "n" => "nombre"],
 ];
 
