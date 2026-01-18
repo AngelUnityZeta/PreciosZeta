@@ -7,7 +7,7 @@ date_default_timezone_set('America/La_Paz');
  * CÓDIGO PROTEGIDO CONTRA CLONACIÓN
  */
 
-$token = "7990464918:AAFPoc7EYkZsyQEOntEfF1eC6V-WyBFAkaQ";
+$token = "8474739152:AAF8T6-YIonvsmwe6Oc2BX5ePwdLZnwbCAE";
 $admin_id = "7621351319";
 
 // BASE DE DATOS DE AGENTES (INYECTABLE)
