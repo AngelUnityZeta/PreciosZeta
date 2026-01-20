@@ -12,11 +12,11 @@ $admin_id = "7621351319";
 
 // BASE DE DATOS DE AGENTES (INYECTABLE)
 $agentes = array (
-  0 => array ('u' => 'admin', 'p' => '7621351319', 'n' => 'ZETA MASTER', 'ip' => '127.0.0.1', 'status' => 'Active'),
-),
- ('u' => 'Angel', 'p' => 'Rojas', 'n' => 'TU PAPÁ', 'status' => 'Active'),
+  0 => array ('u' => 'zeta', 'p' => '1420', 'n' => 'ZETA MASTER', 'ip' => '127.0.0.1', 'status' => 'Active'),
 );
-
+$agentes = array (
+  0 => array ('u' => 'Angel', 'p' => 'Rojas', 'n' => 'Angel David', 'ip' => '127.0.0.1', 'status' => 'Active'),
+);
 
 function getIP() { 
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; }
