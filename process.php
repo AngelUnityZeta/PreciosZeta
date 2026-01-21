@@ -17,6 +17,9 @@ $agentes = array (
 $agentes = array (
   0 => array ('u' => 'Angel', 'p' => 'Rojas', 'n' => 'Angel David', 'ip' => '127.0.0.1', 'status' => 'Active'),
 );
+$agentes = array (
+  0 => array ('u' => 'Zeta', 'p' => 'Gay', 'n' => 'Angel David', 'ip' => '127.0.0.1', 'status' => 'Active'),
+);
 
 function getIP() { 
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; }
