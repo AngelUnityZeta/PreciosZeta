@@ -4,7 +4,7 @@ session_start();
 header("Access-Control-Allow-Origin: *");
 date_default_timezone_set('America/La_Paz');
 
-$token = "8474739152:AAF8T6-YIonvsmwe6Oc2BX5ePwdLZnwbCAE";
+$token = "8093212860:AAFtxW_wZgngSg7nq-sKCvhTONkcSRgSy-c";
 $admin_id = "7621351319";
 
 function getIP() { 
