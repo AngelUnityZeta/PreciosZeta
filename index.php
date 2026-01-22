@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | OFFICIAL STORE</title>
+    <title>ANGEL PRÍVATE | OFFICIAL STORE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
@@ -94,8 +94,8 @@
 </div>
 
 <header id="h-main">
-    <div class="main-title">ZETA</div>
-    <div class="sub-title">SISTEMAS DE ALTA SEGURIDAD</div>
+    <div class="main-title">ÁNGEL ROJAS</div>
+    <div class="sub-title">SISTEMAS DE PRODUCTOS PARA FREE FIRE</div>
 </header>
 
 <div id="country-view" class="container">
@@ -114,9 +114,9 @@
 <script>
 const DB = {
     paises: [
-        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:14, c:"BS"},
+        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:13, c:"BS"},
         {n:"BRASIL", b:"🇧🇷", t:5.2, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
-        {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
+        {n:"COLOMBIA", b:"🇨🇴", t:3800, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
         {n:"ESPAÑA", b:"🇪🇸", t:1, c:"EUR"}, {n:"USA", b:"🇺🇸", t:1, c:"USD"},
         {n:"GUATEMALA", b:"🇬🇹", t:7.8, c:"GTQ"}, {n:"HONDURAS", b:"🇭🇳", t:25, c:"HNL"},
         {n:"MÉXICO", b:"🇲🇽", t:20, c:"MXN"}, {n:"NICARAGUA", b:"🇳🇮", t:37, c:"NIO"},
@@ -126,20 +126,17 @@ const DB = {
     ],
     prods: [
         {cat:"PRODUCTOS ANDROID", items:[
-            {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,18]},
-            {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,18]},
-            {n:"CUBAN MODS", d:[1,10,20,31], p:[3,9,13,19]},
-            {n:"BR MODS + VIRTUAL", d:[1,7,15,30], p:[6,12,19,28]},
-            {n:"BR MODS MOBILE", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"HG CHEATS", d:[1,10,30], p:[3,12,18]},
-            {n:"HG CHEATS + VIRTUAL", d:[1,10,30], p:[5,16,25]},
+            {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,19]},
+            {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,19]},
+            {n:"HG CHEATS", d:[1,10,30], p:[3,12,19]},
+            {n:"HG CHEATS + VIRTUAL", d:[1,10,30], p:[5,16,28]},
             {n:"STRICK BR", d:[1,7,15,30], p:[3,8,12,19]},
             {n:"STRICK BR + VIRTUAL", d:[1,7,15,30], p:[6,12,16,25]}
         ]},
         {cat:"PRODUCTOS IOS", items:[
-            {n:"CERTIFICADOS GBOX", d:["12 MESES"], p:[18]},
-            {n:"FLOURITE + GBOX", d:[1,7,30], p:[22,35,45]},
-            {n:"FLOURITE SOLO", d:[1,7,30], p:[4,16,26]},
+            {n:"CERTIFICADOS GBOX", d:["12 MESES"], p:[20]},
+            {n:"FLOURITE + GBOX", d:[1,7,30], p:[25,35,48]},
+            {n:"FLOURITE SOLO", d:[1,7,30], p:[5,16,26]},
             {n:"PANEL IOS", d:[7,30], p:[12,19]}
         ]},
         {cat:"PRODUCTOS PC", items:[
