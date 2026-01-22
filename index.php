@@ -1,204 +1,120 @@
-<?php session_start(); $auth = $_SESSION['zeta_auth'] ?? false; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | V12 ELITE CONTROL</title>
+    <title>ZETA HACKS | OFFICIAL STORE V12</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS AVANZADO - ESTILO DEEP WEB / MILITAR */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
         
-        :root { --p: #00ff41; --s: #00f2ff; --a: #ff003c; --bg: #000000; }
+        :root { --p: #00ff41; --s: #00f2ff; --bg: #000; --glass: rgba(255, 255, 255, 0.03); }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             margin: 0; background: var(--bg); color: #fff; 
             font-family: 'Share Tech Mono', monospace; overflow-x: hidden;
             user-select: none;
         }
 
-        /* FONTO DE PARTÍCULAS MATRIX */
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
-
-        /* SCANNER LÁSER */
-        .laser {
-            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--p); box-shadow: 0 0 15px var(--p);
-            z-index: 9999; pointer-events: none; animation: scan 4s linear infinite;
-        }
-        @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
-
-        /* LOGIN INTERFACE */
-        #bloqueo {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .login-box {
-            width: 90%; max-width: 400px; padding: 40px; border: 1px solid var(--p);
-            background: rgba(10,10,10,0.9); border-radius: 5px; text-align: center;
-            box-shadow: 0 0 50px rgba(0,255,65,0.2); position: relative;
+        /* FONDO MATRIX DINÁMICO */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0a1a0a 0%, #000 100%);
+            z-index: -1;
         }
 
-        /* HEADER PROFESIONAL */
+        /* HEADER ELITE */
         header {
-            position: fixed; top: 0; width: 100%; height: 70px;
-            background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--p);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; z-index: 1000; backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%; height: 75px;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 2px solid var(--p); z-index: 1000;
+            box-shadow: 0 0 20px rgba(0,255,65,0.3);
+        }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.8rem; letter-spacing: 5px; }
+
+        /* VISTA PRINCIPAL (PAÍSES) */
+        .hero { padding: 110px 20px 40px; text-align: center; }
+        .hero h1 { font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 5px; color: var(--p); text-shadow: 0 0 10px var(--p); }
+        
+        .grid-countries {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px; padding: 20px; max-width: 1000px; margin: auto;
+        }
+        .country-card {
+            background: var(--glass); border: 1px solid #222;
+            padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .country-card:hover { border-color: var(--p); transform: scale(1.05); background: rgba(0,255,65,0.05); }
+        .country-card span { font-size: 2.2rem; margin-bottom: 8px; }
+        .country-card b { font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* VISTA TIENDA */
+        #store-view { display: none; padding: 100px 15px 40px; max-width: 800px; margin: auto; }
+        .back-btn { background: #111; border: 1px solid var(--s); color: var(--s); padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 25px; font-family: 'Orbitron'; font-size: 0.7rem; }
+
+        .category-title {
+            font-family: 'Orbitron'; font-size: 1.1rem; color: var(--p);
+            margin: 40px 0 20px; border-left: 5px solid var(--p); padding-left: 15px;
+            background: rgba(0,255,65,0.05); padding-top: 5px; padding-bottom: 5px;
         }
 
-        /* MENÚ LATERAL CUBAN STYLE */
-        .side-nav {
-            position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
-            background: #050505; border-right: 2px solid var(--p);
-            z-index: 2000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-top: 80px;
+        .product-card {
+            background: #050505; border: 1px solid #151515; border-radius: 15px; padding: 20px;
+            margin-bottom: 25px; border-top: 4px solid var(--s); box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        .side-nav.open { left: 0; box-shadow: 0 0 100px rgba(0,255,65,0.3); }
+        .product-card h3 { font-family: 'Orbitron'; color: #fff; margin-top: 0; font-size: 1rem; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
-        /* CARDS DE PAISES */
-        .container { padding: 90px 15px 40px; display: none; max-width: 700px; margin: 0 auto; }
-        .active { display: block; animation: glt 0.3s ease-out; }
+        .price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #111;
+        }
+        .price-tag { color: var(--p); font-weight: 900; font-size: 1.1rem; }
 
-        .country-btn {
-            background: rgba(20,20,20,0.8); border: 1px solid #222;
-            padding: 20px; margin-bottom: 12px; border-radius: 4px;
-            display: flex; align-items: center; cursor: pointer;
-            transition: 0.3s; border-left: 4px solid var(--s);
+        .btn-buy {
+            background: var(--p); color: #000; font-weight: 900;
+            padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.7rem; transition: 0.3s;
         }
-        .country-btn:hover { background: #111; border-color: var(--p); transform: scale(1.02); }
+        .btn-buy:hover { background: #fff; box-shadow: 0 0 15px #fff; }
 
-        /* PRECIOS HUD */
-        .price-card {
-            background: #080808; border: 1px solid #1a1a1a;
-            padding: 25px; border-radius: 10px; margin-bottom: 25px;
-            position: relative; overflow: hidden;
-        }
-        .price-card::before {
-            content: "ZETA SECURITY"; position: absolute; top: 5px; right: 10px;
-            font-size: 0.6rem; color: #333;
-        }
-        .row-item {
-            display: flex; justify-content: space-between; padding: 12px 0;
-            border-bottom: 1px solid #111; font-size: 1.1rem;
-        }
-        .row-item b { color: var(--p); text-shadow: 0 0 5px var(--p); }
+        /* ANIMACIÓN */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeInUp 0.5s ease-out; }
 
-        .btn-copy {
-            width: 100%; background: var(--p); color: #000; font-weight: 900;
-            padding: 15px; border: none; border-radius: 5px; cursor: pointer;
-            font-family: 'Orbitron'; margin-top: 15px; transition: 0.3s;
-        }
-
-        /* NOTIFICACIONES HUD */
-        #hud-notif {
-            position: fixed; bottom: 20px; left: 20px; z-index: 9999;
-            pointer-events: none;
-        }
-        .notif {
-            background: rgba(0,0,0,0.9); border-left: 5px solid var(--p);
-            padding: 15px 25px; margin-top: 10px; animation: slideIn 0.5s forwards;
-            font-size: 0.8rem; color: var(--p); box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-        @keyframes glt { 0% { opacity: 0; transform: skewX(10deg); } 100% { opacity: 1; transform: skewX(0); } }
+        .mantenimiento { background: rgba(255,0,0,0.1); border: 1px dashed #f00; color: #ff4444; padding: 15px; text-align: center; border-radius: 10px; font-size: 0.8rem; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<div class="laser"></div>
-<canvas id="matrix-canvas"></canvas>
-
-<div id="bloqueo" style="display: <?= $auth ? 'none' : 'flex' ?>;">
-    <div class="login-box">
-        <h1 style="font-family:'Orbitron'; color:var(--p);">ZETA HACKS</h1>
-        <p style="color:#555; font-size:0.7rem;">SISTEMA DE CONTROL DE VENDEDORES</p>
-        <input type="text" id="m_u" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:var(--p); margin:10px 0;" placeholder="USUARIO">
-        <input type="password" id="m_p" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:var(--p); margin:10px 0;" placeholder="CONTRASEÑA">
-        <button class="btn-copy" onclick="login()">AUTENTICAR SISTEMA</button>
-    </div>
-</div>
+<div class="bg-glow"></div>
 
 <header>
-    <i class="fa fa-bars" style="font-size:25px; color:var(--p);" onclick="toggleNav()"></i>
-    <div style="font-family:'Orbitron'; font-size:1.5rem; letter-spacing:5px;">ZETA<span style="color:var(--p);">HACKS</span></div>
-    <div id="clock" style="color:var(--s);">00:00:00</div>
+    <div class="logo-text">ZETA<span style="color:var(--p);">STORE</span></div>
 </header>
 
-<div class="side-nav" id="sideNav">
-    <div class="menu-item" style="padding:20px; border-bottom:1px solid #111; color:var(--p); font-family:Orbitron;">MENU PRINCIPAL</div>
-    <div onclick="irHome()" style="padding:20px; cursor:pointer;"><i class="fa fa-home"></i> PANEL DE PRECIOS</div>
-    <div onclick="location.reload()" style="padding:20px; cursor:pointer;"><i class="fa fa-sync"></i> ACTUALIZAR</div>
-    <div style="padding:20px; color:#333; position:absolute; bottom:0;">V12.0.4 ELITE</div>
+<div id="country-view" class="hero fade-in">
+    <h1>SISTEMA DE VENTAS OFICIAL</h1>
+    <p style="color: #444; margin-bottom: 40px;">[ SELECCIONE SU REGIÓN PARA CONTINUAR ]</p>
+    <div class="grid-countries" id="country-grid"></div>
 </div>
 
-<div id="p-home" class="container active">
-    <div id="list-p"></div>
+<div id="store-view">
+    <button class="back-btn" onclick="goHome()"><i class="fa fa-arrow-left"></i> REGRESAR</button>
+    <div id="region-tag" style="font-family:'Orbitron'; color:var(--s); margin-bottom:20px; text-align:center; font-size:1.2rem;"></div>
+    
+    <div class="mantenimiento">⚠️ MÉTODOS DE PAGO EN ACTUALIZACIÓN - PAGO MANUAL VÍA WHATSAPP</div>
+    
+    <div id="product-list"></div>
 </div>
-
-<div id="p-detail" class="container">
-    <button onclick="irHome()" style="background:#111; color:var(--s); border:1px solid #222; padding:10px 25px; margin-bottom:25px; font-family:'Orbitron';">VOLVER</button>
-    <div id="cont-d"></div>
-</div>
-
-<div id="hud-notif"></div>
 
 <script>
-/* 🔱 MOTOR VISUAL Y DE SEGURIDAD ZETA 🔱 */
-
-const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@&";
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#0F0"; ctx.font = fontSize + "px monospace";
-    for(let i=0; i<drops.length; i++) {
-        const text = chars[Math.floor(Math.random()*chars.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    }
-}
-setInterval(drawMatrix, 50);
-
-// SEGURIDAD ANTI-INSPECCIÓN
-document.onkeydown = (e) => {
-    if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-        trackAlert("INTENTO DE INSPECCIÓN DETECTADO");
-        return false;
-    }
-};
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-function trackAlert(m) {
-    const fd = new FormData(); fd.append('accion','shield_alert');
-    fetch('process.php',{method:'POST', body:fd});
-}
-
-function showHUD(m) {
-    const h = document.getElementById('hud-notif');
-    const n = document.createElement('div'); n.className = 'notif'; n.innerHTML = `> ${m}`;
-    h.appendChild(n); setTimeout(() => n.remove(), 4000);
-}
-
-// RELOJ
-setInterval(() => {
-    document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-}, 1000);
-
 const DB = {
     paises: [
-        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:13, c:"BS"},
-        {n:"BRASIL", b:"🇧🇷", t:5.20, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
+        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:14, c:"BS"},
+        {n:"BRASIL", b:"🇧🇷", t:5.2, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
         {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
         {n:"ESPAÑA", b:"🇪🇸", t:1, c:"EUR"}, {n:"USA", b:"🇺🇸", t:1, c:"USD"},
         {n:"GUATEMALA", b:"🇬🇹", t:7.8, c:"GTQ"}, {n:"HONDURAS", b:"🇭🇳", t:25, c:"HNL"},
@@ -208,7 +124,7 @@ const DB = {
         {n:"VENEZUELA", b:"🇻🇪", t:550, c:"VES"}
     ],
     prods: [
-        {cat:"ANDROID ELITE", items:[
+        {cat:"PRODUCTOS PARA ANDROID", items:[
             {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,18]},
             {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,18]},
             {n:"CUBAN MODS", d:[1,10,20,31], p:[3,9,13,19]},
@@ -219,74 +135,76 @@ const DB = {
             {n:"STRICK BR", d:[1,7,15,30], p:[3,8,12,19]},
             {n:"STRICK BR + VIRTUAL", d:[1,7,15,30], p:[6,12,16,25]}
         ]},
-        {cat:"IOS ELITE", items:[
+        {cat:"PRODUCTOS PARA IOS", items:[
             {n:"CERTIFICADOS GBOX", d:["12 MESES"], p:[18]},
             {n:"FLOURITE + GBOX", d:[1,7,30], p:[22,35,45]},
             {n:"FLOURITE SOLO", d:[1,7,30], p:[4,16,26]},
             {n:"PANEL IOS", d:[7,30], p:[12,19]}
         ]},
-        {cat:"PC ELITE", items:[
+        {cat:"PRODUCTOS PARA PC", items:[
             {n:"CUBAN PANEL PC", d:[1,7,30,"PERMANENTE"], p:[3,8,16,25]},
             {n:"BR MODS BYPASS", d:[1,10,30], p:[3,12,20]}
         ]}
     ]
 };
 
-function login() {
-    const fd = new FormData(); fd.append('accion','login');
-    fd.append('u',document.getElementById('m_u').value); fd.append('p',document.getElementById('m_p').value);
-    fetch('process.php',{method:'POST', body:fd}).then(r=>r.text()).then(res=>{
-        if(res.trim()=='ok'){
-            document.getElementById('bloqueo').style.display='none';
-            showHUD("SISTEMA AUTORIZADO - BIENVENIDO COMANDANTE");
-            renderHome();
-        } else { showHUD("ERROR DE CREDENCIALES - IP RASTREADA"); }
-    });
+function track(info) {
+    const fd = new FormData(); fd.append('accion', 'track_client'); fd.append('data', info);
+    fetch('process.php', {method: 'POST', body: fd});
 }
 
-function renderHome() {
-    const l = document.getElementById('list-p'); l.innerHTML = '';
+function renderCountries() {
+    const grid = document.getElementById('country-grid');
     DB.paises.sort((a,b)=>a.n.localeCompare(b.n)).forEach(p => {
-        l.innerHTML += `<div class="country-btn" onclick="verP('${p.n}')"><span>${p.b}</span><b style="margin-left:20px;">${p.n}</b></div>`;
+        const div = document.createElement('div');
+        div.className = 'country-card';
+        div.onclick = () => showStore(p);
+        div.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
+        grid.appendChild(div);
     });
 }
 
-function verP(n) {
-    const p = DB.paises.find(x => x.n === n);
-    document.getElementById('p-home').classList.remove('active');
-    document.getElementById('p-detail').classList.add('active');
+function showStore(p) {
+    track("Cliente consultó región: " + p.n);
+    document.getElementById('country-view').style.display = 'none';
+    document.getElementById('store-view').style.display = 'block';
+    document.getElementById('region-tag').innerText = "📍 " + p.n;
     window.scrollTo(0,0);
-    showHUD("CARGANDO DATOS DE " + n);
-    
-    let h = `<div style="background:rgba(255,0,0,0.1); border:1px dashed #f00; padding:15px; border-radius:5px; margin-bottom:20px; color:#ff4444; font-size:0.8rem; text-align:center;">SISTEMA DE PAGOS EN MANTENIMIENTO</div>`;
-    
+
+    const list = document.getElementById('product-list');
+    list.innerHTML = '';
+
     DB.prods.forEach(cat => {
-        h += `<h2 style="color:var(--p); border-bottom:1px solid #222; padding-bottom:10px; font-family:Orbitron;">🔱 ${cat.cat}</h2>`;
+        list.innerHTML += `<div class="category-title">🔱 ${cat.cat}</div>`;
         cat.items.forEach(i => {
-            let row = ""; let clip = `💎 PRECIOS ZETA: ${i.n}\n📍 Región: ${p.n}\n───────────────────\n`;
+            let pricesRows = '';
             i.d.forEach((d, idx) => {
-                let px = Math.ceil(i.p[idx] * p.t);
-                let tag = isNaN(d) ? d : d + " DIAS";
-                row += `<div class="row-item"><span>✅ ${tag}</span><b>${px.toLocaleString()} ${p.c}</b></div>`;
-                clip += `✅ ${tag}: ${px.toLocaleString()} ${p.c}\n`;
+                let localVal = Math.ceil(i.p[idx] * p.t);
+                let tag = isNaN(d) ? d : d + " DÍAS";
+                pricesRows += `
+                    <div class="price-row">
+                        <span>✅ ${tag}</span>
+                        <div class="price-tag">${localVal.toLocaleString()} ${p.c}</div>
+                        <button class="btn-buy" onclick="buy('${i.n}', '${tag}', '${localVal} ${p.c}')">COMPRAR</button>
+                    </div>`;
             });
-            h += `<div class="price-card"><h3>${i.n}</h3>${row}<button class="btn-copy" onclick="copiar(this, \`${clip}\`)">COPIAR LISTA</button></div>`;
+            list.innerHTML += `<div class="product-card fade-in"><h3>${i.n}</h3>${pricesRows}</div>`;
         });
     });
-    document.getElementById('cont-d').innerHTML = h;
 }
 
-function copiar(btn, txt) {
-    navigator.clipboard.writeText(txt);
-    btn.innerText = "LISTA COPIADA";
-    showHUD("BUFFER DE PORTAPAPELES ACTUALIZADO");
-    setTimeout(() => btn.innerText = "COPIAR LISTA", 2000);
+function buy(prod, dur, price) {
+    track("BOTÓN COMPRA: " + prod + " | " + price);
+    const msg = `Hola ZETA HACKS, quiero comprar:%0A💎 PRODUCTO: ${prod}%0A⏳ DURACIÓN: ${dur}%0A💰 PRECIO: ${price}`;
+    window.open(`https://wa.me/573001308078?text=${msg}`, '_blank');
 }
 
-function toggleNav() { document.getElementById('sideNav').classList.toggle('open'); }
-function irHome() { toggleNav(); document.getElementById('p-detail').classList.remove('active'); document.getElementById('p-home').classList.add('active'); }
+function goHome() {
+    document.getElementById('store-view').style.display = 'none';
+    document.getElementById('country-view').style.display = 'block';
+}
 
-if("<?=$auth?>") renderHome();
+renderCountries();
 </script>
 </body>
 </html>
