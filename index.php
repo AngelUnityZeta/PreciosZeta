@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANGEL PRÍVATE | OFFICIAL STORE</title>
+    <title>ZETA HACKS | OFFICIAL STORE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
@@ -88,13 +88,13 @@
 <body>
 
 <div id="loader">
-    <div class="main-title" style="font-size: 2rem;">ZETA</div>
+    <div class="main-title" style="font-size: 2rem;">ZetaHacks</div>
     <div class="scanner"></div>
     <p style="font-family: Orbitron; font-size: 0.6rem; margin-top: 20px; color: #444;">INICIALIZANDO PROTOCOLOS DE VENTA...</p>
 </div>
 
 <header id="h-main">
-    <div class="main-title">ÁNGEL ROJAS</div>
+    <div class="main-title">ZetaHacks</div>
     <div class="sub-title">SISTEMAS DE PRODUCTOS PARA FREE FIRE</div>
 </header>
 
@@ -188,7 +188,7 @@ function renderStore(p) {
 
 function buy(pr, du, pc) {
     track("CLICK COMPRA: " + pr);
-    const m = `Hola ZETA HACKS, deseo adquirir:%0A💎 SOFTWARE: ${pr}%0A⏳ TIEMPO: ${du}%0A💰 COSTO: ${pc}`;
+    const m = `Hola Ángel, deseo adquirir:%0A💎 SOFTWARE: ${pr}%0A⏳ TIEMPO: ${du}%0A💰 COSTO: ${pc}`;
     window.open(`https://wa.me/573001308078?text=${m}`, '_blank');
 }
 
