@@ -3,120 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | OFFICIAL STORE</title>
+    <title>ZETA HACKS | PREMIUM STORE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
         
-        :root { --p: #00ff41; --s: #00f2ff; --bg: #030303; --card: rgba(15, 15, 15, 0.95); }
+        :root { 
+            --p: #00ff41; --s: #00f2ff; --bg: #050505; 
+            --card-bg: #0d0d0d; --border: #1a1a1a;
+            --accent-glow: rgba(0, 255, 65, 0.2);
+        }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; cursor: crosshair; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
 
-        /* PANTALLA DE CARGA TÁCTICA */
-        #loader {
+        /* PANTALLA DE ACCESO (INTRO) */
+        #intro {
             position: fixed; inset: 0; background: #000; z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .scanner {
-            width: 250px; height: 2px; background: var(--p);
-            box-shadow: 0 0 20px var(--p); animation: scan 2s infinite;
+        .intro-btn {
+            border: 2px solid var(--p); padding: 20px 50px; font-family: 'Orbitron';
+            color: var(--p); font-size: 1.2rem; background: transparent;
+            box-shadow: 0 0 20px var(--accent-glow); transition: 0.3s;
         }
-        @keyframes scan { 0% { transform: translateY(-50px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(50px); opacity: 0; } }
+        .intro-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 40px var(--p); }
 
-        /* HEADER & BRANDING */
+        /* HEADER DE ALTA POTENCIA */
         header {
-            padding: 80px 20px 40px; text-align: center;
-            background: radial-gradient(circle at top, #0a1f0a 0%, transparent 70%);
+            padding: 60px 0; text-align: center; border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
         }
-        .main-title { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: 15px; text-shadow: 0 0 30px var(--p); }
-        .sub-title { font-family: 'Orbitron'; color: var(--s); letter-spacing: 5px; font-size: 0.9rem; margin-top: 10px; opacity: 0.8; }
+        .brand { font-family: 'Orbitron'; font-size: 4.5rem; font-weight: 900; letter-spacing: 25px; margin: 0; text-shadow: 0 0 25px var(--p); }
+        .tagline { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--s); letter-spacing: 10px; margin-top: 15px; text-transform: uppercase; }
 
-        /* GRID DE PAÍSES ESTILO APP */
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
-        .country-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px; margin-top: 30px;
-        }
-        .c-card {
-            background: var(--card); border: 1px solid #222; border-radius: 15px;
-            padding: 25px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;
-        }
-        .c-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(45deg, transparent, rgba(0,255,65,0.05)); }
-        .c-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 10px 40px rgba(0,255,65,0.15); }
-        .c-card span { font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
-        .c-card b { font-family: 'Orbitron'; font-size: 0.75rem; color: #aaa; letter-spacing: 2px; }
-
-        /* VISTA DE PRODUCTOS ELITE */
-        #store-view { display: none; animation: fadeIn 0.8s forwards; }
-        .cat-header {
-            font-family: 'Orbitron'; color: var(--p); font-size: 1.4rem;
-            margin: 50px 0 20px; border-left: 5px solid var(--p); padding-left: 20px;
-            text-transform: uppercase; letter-spacing: 3px;
-        }
-        .prod-card {
-            background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 20px;
-            padding: 30px; margin-bottom: 30px; position: relative;
-        }
-        .prod-card h3 { font-family: 'Orbitron'; margin: 0 0 20px; font-size: 1.2rem; border-bottom: 1px solid #222; padding-bottom: 15px; color: var(--s); }
-        
-        .price-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid #111;
-        }
-        .p-val { color: var(--p); font-family: 'Orbitron'; font-weight: 700; font-size: 1.2rem; }
-
-        .btn-order {
-            background: var(--p); color: #000; font-weight: 900; border: none;
-            padding: 10px 20px; border-radius: 8px; font-family: 'Orbitron';
-            font-size: 0.7rem; cursor: pointer; transition: 0.3s;
-        }
-        .btn-order:hover { background: #fff; transform: scale(1.1); box-shadow: 0 0 20px #fff; }
-
-        /* BOTÓN FLOTANTE SOPORTE */
-        .sup-float {
-            position: fixed; bottom: 30px; right: 30px; background: #25d366;
-            width: 65px; height: 65px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 30px;
-            box-shadow: 0 0 30px rgba(37,211,102,0.4); z-index: 5000;
+        /* HUD DEL SISTEMA */
+        .hud-bar {
+            max-width: 1200px; margin: 20px auto; padding: 10px 20px;
+            background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+            display: flex; justify-content: space-between; font-size: 0.7rem; color: #444; font-family: 'Orbitron';
         }
 
-        @keyframes fadeIn { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
+        /* CONTENEDOR PRINCIPAL */
+        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid-view { display: none; }
+        .active { display: block; animation: powerOn 1s ease-out; }
+
+        /* TARJETAS DE PAÍS (NUEVO DISEÑO) */
+        .countries {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        .country-box {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
+            padding: 40px 20px; text-align: center; transition: 0.4s;
+            position: relative; overflow: hidden;
+        }
+        .country-box::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--p); transform: scaleX(0); transition: 0.4s; }
+        .country-box:hover { border-color: var(--p); background: #111; transform: translateY(-10px); }
+        .country-box:hover::before { transform: scaleX(1); }
+        .country-box span { font-size: 3.5rem; display: block; margin-bottom: 20px; filter: grayscale(0.5); }
+        .country-box b { font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 2px; }
+
+        /* PRODUCTOS (DISEÑO INDUSTRIAL) */
+        .product-item {
+            background: #080808; border: 1px solid var(--border); padding: 0;
+            margin-bottom: 40px; border-radius: 8px; overflow: hidden;
+        }
+        .product-header {
+            background: #111; padding: 20px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 20px;
+        }
+        .product-header h3 { font-family: 'Orbitron'; margin: 0; font-size: 1.3rem; color: var(--s); }
+        .price-table { padding: 20px; }
+        .price-row {
+            display: grid; grid-template-columns: 1fr 1fr 150px;
+            align-items: center; padding: 15px; border-bottom: 1px solid #111;
+        }
+        .price-row:last-child { border: none; }
+        .p-price { color: var(--p); font-family: 'Orbitron'; font-weight: 900; font-size: 1.4rem; }
+
+        .buy-btn {
+            background: var(--p); color: #000; border: none; padding: 12px;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem;
+            cursor: pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: 0.3s;
+        }
+        .buy-btn:hover { background: #fff; transform: scale(1.05); }
+
+        /* SOPORTE */
+        .support-card {
+            background: #25d366; color: #000; position: fixed; bottom: 30px; right: 30px;
+            width: 70px; height: 70px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 35px;
+            box-shadow: 0 0 30px rgba(37,211,102,0.5); z-index: 100;
+        }
+
+        @keyframes powerOn { 0% { opacity: 0; filter: brightness(3); } 100% { opacity: 1; filter: brightness(1); } }
     </style>
 </head>
 <body>
 
-<div id="loader">
-    <div class="main-title" style="font-size: 2rem;">ZetaHacks</div>
-    <div class="scanner"></div>
-    <p style="font-family: Orbitron; font-size: 0.6rem; margin-top: 20px; color: #444;">INICIALIZANDO PROTOCOLOS DE VENTA...</p>
+<div id="intro">
+    <h1 style="font-family:'Orbitron'; font-size:1.5rem; margin-bottom:30px; letter-spacing:10px;">ZETA HACKS V12</h1>
+    <button class="intro-btn" onclick="bootSystem()">ACCEDER AL SISTEMA</button>
 </div>
 
-<header id="h-main">
-    <div class="main-title">ZetaHacks</div>
-    <div class="sub-title">SISTEMAS DE PRODUCTOS PARA FREE FIRE</div>
+<header>
+    <div class="brand">Zeta Hacks</div>
+    <div class="tagline">TIENDA OFICIAL DE SOFTWARE ELITE</div>
 </header>
 
-<div id="country-view" class="container">
-    <div style="text-align: center; color: #555; font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 20px;">SELECCIONE REGIÓN DE OPERACIÓN</div>
-    <div class="country-grid" id="cg"></div>
+<div class="hud-bar">
+    <span>SYSTEM: ONLINE</span>
+    <span>SECURITY: ENC-V12</span>
+    <span id="timer">REGION: PENDING</span>
 </div>
 
-<div id="store-view" class="container">
-    <button onclick="goBack()" style="background:transparent; border:1px solid #333; color:#777; padding:10px 25px; border-radius:5px; cursor:pointer; font-family:Orbitron; font-size:0.6rem;">&lt; VOLVER AL MAPA</button>
-    <div id="region-title" style="font-family:Orbitron; font-size:2rem; color:var(--p); margin-top:20px; text-shadow: 0 0 15px var(--p);"></div>
-    <div id="pl"></div>
+<div class="main-container">
+    <div id="view-countries" class="grid-view active">
+        <div class="countries" id="c-grid"></div>
+    </div>
+
+    <div id="view-store" class="grid-view">
+        <button onclick="backToMap()" style="background:none; border:none; color:var(--s); font-family:Orbitron; margin-bottom:30px; cursor:pointer;">&lt;&lt; VOLVER AL TERMINAL</button>
+        <h2 id="current-region" style="font-family:Orbitron; font-size:2.5rem; color:var(--p); margin-bottom:40px;"></h2>
+        <div id="p-list"></div>
+    </div>
 </div>
 
-<a href="https://wa.me/573001308078" class="sup-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/573001308078" class="support-card"><i class="fab fa-whatsapp"></i></a>
 
 <script>
 const DB = {
     paises: [
         {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:13, c:"BS"},
         {n:"BRASIL", b:"🇧🇷", t:5.2, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
-        {n:"COLOMBIA", b:"🇨🇴", t:3800, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
+        {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
         {n:"ESPAÑA", b:"🇪🇸", t:1, c:"EUR"}, {n:"USA", b:"🇺🇸", t:1, c:"USD"},
         {n:"GUATEMALA", b:"🇬🇹", t:7.8, c:"GTQ"}, {n:"HONDURAS", b:"🇭🇳", t:25, c:"HNL"},
         {n:"MÉXICO", b:"🇲🇽", t:20, c:"MXN"}, {n:"NICARAGUA", b:"🇳🇮", t:37, c:"NIO"},
@@ -125,77 +148,86 @@ const DB = {
         {n:"VENEZUELA", b:"🇻🇪", t:550, c:"VES"}
     ],
     prods: [
-        {cat:"PRODUCTOS ANDROID", items:[
+        {cat:"ANDROID SOLUTIONS", items:[
             {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,19]},
             {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"HG CHEATS", d:[1,10,30], p:[3,12,19]},
-            {n:"HG CHEATS + VIRTUAL", d:[1,10,30], p:[5,16,28]},
+            {n:"HG CHEATS", d:[1,10,30], p:[3,12,20]},
+            {n:"HG CHEATS + VIRTUAL", d:[1,10,30], p:[5,16,29]},
             {n:"STRICK BR", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"STRICK BR + VIRTUAL", d:[1,7,15,30], p:[6,12,16,25]}
+            {n:"STRICK BR + VIRTUAL", d:[1,7,15,30], p:[6,12,16,29]}
         ]},
-        {cat:"PRODUCTOS IOS", items:[
+        {cat:"IOS SOLUTIONS", items:[
             {n:"CERTIFICADOS GBOX", d:["12 MESES"], p:[20]},
-            {n:"FLOURITE + GBOX", d:[1,7,30], p:[25,35,48]},
-            {n:"FLOURITE SOLO", d:[1,7,30], p:[5,16,26]},
-            {n:"PANEL IOS", d:[7,30], p:[12,19]}
-        ]},
-        {cat:"PRODUCTOS PC", items:[
-            {n:"CUBAN PANEL PC", d:[1,7,30,"PERMANENTE"], p:[3,8,16,25]},
+            {n:"FLOURITE + GBOX", d:[1,7,30], p:[25,38,50]},
+            {n:"FLOURITE SOLO", d:[1,7,30], p:[5,16,28]},
+        {cat:"PC SOLUTIONS", items:[
+            {n:"CUBAN PANEL PC", d:[1,7,30,"PERMANENTE"], p:[3,8,16,30]},
             {n:"BR MODS BYPASS", d:[1,10,30], p:[3,12,20]}
         ]}
     ]
 };
 
-setTimeout(() => { document.getElementById('loader').style.display='none'; }, 2000);
+const talk = (txt) => {
+    const synth = window.speechSynthesis;
+    const ut = new SpeechSynthesisUtterance(txt);
+    ut.lang = 'es-ES'; ut.rate = 0.95; ut.pitch = 0.8;
+    synth.speak(ut);
+};
 
-function track(d) {
-    const fd = new FormData(); fd.append('accion', 'track_client'); fd.append('data', d);
-    fetch('process.php', {method:'POST', body:fd});
+function bootSystem() {
+    document.getElementById('intro').style.display = 'none';
+    talk("Sistema Zeta Hacks iniciado. Bienvenido a la tienda oficial. Seleccione una región para ver los precios locales.");
 }
 
 function init() {
-    const g = document.getElementById('cg');
+    const grid = document.getElementById('c-grid');
     DB.paises.sort((a,b)=>a.n.localeCompare(b.n)).forEach(p => {
-        const div = document.createElement('div'); div.className = 'c-card';
-        div.onclick = () => renderStore(p);
-        div.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
-        g.appendChild(div);
+        const d = document.createElement('div'); d.className = 'country-box';
+        d.onclick = () => loadStore(p);
+        d.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
+        grid.appendChild(d);
     });
 }
 
-function renderStore(p) {
-    track("VIENDO: " + p.n);
-    document.getElementById('h-main').style.display = 'none';
-    document.getElementById('country-view').style.display = 'none';
-    document.getElementById('store-view').style.display = 'block';
-    document.getElementById('region-title').innerText = p.n;
+function loadStore(p) {
+    talk("Analizando precios para " + p.n);
+    document.getElementById('view-countries').classList.remove('active');
+    document.getElementById('view-store').classList.add('active');
+    document.getElementById('current-region').innerText = "REGION: " + p.n;
+    document.getElementById('timer').innerText = "REGION: " + p.n;
     window.scrollTo(0,0);
 
-    const l = document.getElementById('pl'); l.innerHTML = '';
+    const container = document.getElementById('p-list');
+    container.innerHTML = '';
+
     DB.prods.forEach(cat => {
-        l.innerHTML += `<div class="cat-header">🔱 ${cat.cat}</div>`;
+        container.innerHTML += `<h2 style="font-family:Orbitron; border-bottom:2px solid #222; padding-bottom:10px; margin-top:60px; color:#444;">${cat.cat}</h2>`;
         cat.items.forEach(i => {
-            let rs = '';
+            let rows = '';
             i.d.forEach((d, idx) => {
-                let v = Math.ceil(i.p[idx] * p.t);
-                let t = isNaN(d) ? d : d + " DÍAS";
-                rs += `<div class="price-item"><span>✅ ${t}</span><div class="p-val">${v.toLocaleString()} ${p.c}</div><button class="btn-order" onclick="buy('${i.n}','${t}','${v} ${p.c}')">ORDENAR</button></div>`;
+                let localPx = Math.ceil(i.p[idx] * p.t);
+                let tag = isNaN(d) ? d : d + " DÍAS";
+                rows += `
+                <div class="price-row">
+                    <span style="font-weight:700;">✅ ${tag}</span>
+                    <span class="p-price">${localPx.toLocaleString()} ${p.c}</span>
+                    <button class="buy-btn" onclick="order('${i.n}', '${tag}', '${localPx} ${p.c}')">REALIZAR ORDEN</button>
+                </div>`;
             });
-            l.innerHTML += `<div class="prod-card"><h3>${i.n}</h3>${rs}</div>`;
+            container.innerHTML += `<div class="product-item"><div class="product-header"><i class="fa fa-microchip" style="color:var(--p);"></i><h3>${i.n}</h3></div><div class="price-table">${rows}</div></div>`;
         });
     });
 }
 
-function buy(pr, du, pc) {
-    track("CLICK COMPRA: " + pr);
-    const m = `Hola Ángel, deseo adquirir:%0A💎 SOFTWARE: ${pr}%0A⏳ TIEMPO: ${du}%0A💰 COSTO: ${pc}`;
-    window.open(`https://wa.me/573001308078?text=${m}`, '_blank');
+function order(name, dur, px) {
+    talk("Procesando pedido de " + name + ". Redirigiendo a soporte.");
+    const link = `https://wa.me/573001308078?text=🔱 *NUEVA ORDEN ZETA HACKS*%0A💎 PRODUCTO: ${name}%0A⏳ DURACIÓN: ${dur}%0A💰 PRECIO: ${px}`;
+    setTimeout(() => { window.open(link, '_blank'); }, 800);
 }
 
-function goBack() {
-    document.getElementById('h-main').style.display = 'block';
-    document.getElementById('store-view').style.display = 'none';
-    document.getElementById('country-view').style.display = 'block';
+function backToMap() {
+    document.getElementById('view-store').classList.remove('active');
+    document.getElementById('view-countries').classList.add('active');
 }
 
 init();
