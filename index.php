@@ -3,141 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | PREMIUM STORE</title>
+    <title>ZETA HACKS | OFFICIAL STORE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@700;900&display=swap');
         
         :root { 
-            --p: #00ff41; --s: #00f2ff; --bg: #050505; 
-            --card-bg: #0d0d0d; --border: #1a1a1a;
-            --accent-glow: rgba(0, 255, 65, 0.2);
+            --primary: #00ff41; 
+            --accent: #00f2ff; 
+            --bg: #0a0a0a; 
+            --card: #151515;
+            --text: #ffffff;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; cursor: crosshair; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
 
-        /* PANTALLA DE ACCESO (INTRO) */
-        #intro {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        /* NAVBAR PROFESIONAL */
+        nav {
+            background: rgba(0,0,0,0.95);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .intro-btn {
-            border: 2px solid var(--p); padding: 20px 50px; font-family: 'Orbitron';
-            color: var(--p); font-size: 1.2rem; background: transparent;
-            box-shadow: 0 0 20px var(--accent-glow); transition: 0.3s;
-        }
-        .intro-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 40px var(--p); }
+        .logo { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; color: var(--primary); }
+        .support-link { color: #888; text-decoration: none; font-size: 0.8rem; border: 1px solid #333; padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
+        .support-link:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* HEADER DE ALTA POTENCIA */
-        header {
-            padding: 60px 0; text-align: center; border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+        /* HERO SECTION */
+        .hero {
+            padding: 60px 5%;
+            background: radial-gradient(circle at top right, #00ff4110, transparent);
+            text-align: center;
         }
-        .brand { font-family: 'Orbitron'; font-size: 4.5rem; font-weight: 900; letter-spacing: 25px; margin: 0; text-shadow: 0 0 25px var(--p); }
-        .tagline { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--s); letter-spacing: 10px; margin-top: 15px; text-transform: uppercase; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; }
+        .hero p { color: #888; font-size: 1.1rem; max-width: 600px; margin: auto; }
 
-        /* HUD DEL SISTEMA */
-        .hud-bar {
-            max-width: 1200px; margin: 20px auto; padding: 10px 20px;
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-            display: flex; justify-content: space-between; font-size: 0.7rem; color: #444; font-family: 'Orbitron';
-        }
+        /* SECCIÓN DE PAÍSES */
+        .container { padding: 40px 5%; max-width: 1400px; margin: auto; }
+        .section-title { font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 30px; color: var(--accent); letter-spacing: 2px; }
 
-        /* CONTENEDOR PRINCIPAL */
-        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .grid-view { display: none; }
-        .active { display: block; animation: powerOn 1s ease-out; }
+        .country-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .country-card {
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #222;
+            transition: all 0.3s ease;
+        }
+        .country-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: #1a1a1a;
+            box-shadow: 0 10px 30px rgba(0,255,65,0.1);
+        }
+        .country-card .flag { font-size: 3rem; display: block; margin-bottom: 15px; }
+        .country-card span { font-weight: 600; letter-spacing: 1px; font-size: 0.9rem; }
 
-        /* TARJETAS DE PAÍS (NUEVO DISEÑO) */
-        .countries {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 25px;
-        }
-        .country-box {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
-            padding: 40px 20px; text-align: center; transition: 0.4s;
-            position: relative; overflow: hidden;
-        }
-        .country-box::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--p); transform: scaleX(0); transition: 0.4s; }
-        .country-box:hover { border-color: var(--p); background: #111; transform: translateY(-10px); }
-        .country-box:hover::before { transform: scaleX(1); }
-        .country-box span { font-size: 3.5rem; display: block; margin-bottom: 20px; filter: grayscale(0.5); }
-        .country-box b { font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 2px; }
+        /* VISTA DE PRODUCTOS */
+        #store-view { display: none; }
+        .back-btn { background: none; border: none; color: #666; cursor: pointer; margin-bottom: 30px; font-size: 1rem; }
+        .back-btn:hover { color: var(--text); }
 
-        /* PRODUCTOS (DISEÑO INDUSTRIAL) */
-        .product-item {
-            background: #080808; border: 1px solid var(--border); padding: 0;
-            margin-bottom: 40px; border-radius: 8px; overflow: hidden;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
         }
-        .product-header {
-            background: #111; padding: 20px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 20px;
+        .product-card {
+            background: var(--card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #222;
         }
-        .product-header h3 { font-family: 'Orbitron'; margin: 0; font-size: 1.3rem; color: var(--s); }
-        .price-table { padding: 20px; }
+        .product-info { padding: 25px; }
+        .product-info h3 { font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 20px; color: var(--primary); }
+
         .price-row {
-            display: grid; grid-template-columns: 1fr 1fr 150px;
-            align-items: center; padding: 15px; border-bottom: 1px solid #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-top: 1px solid #222;
         }
-        .price-row:last-child { border: none; }
-        .p-price { color: var(--p); font-family: 'Orbitron'; font-weight: 900; font-size: 1.4rem; }
+        .price-text { font-weight: 800; font-size: 1.2rem; }
+        .duration { color: #888; font-size: 0.9rem; }
 
-        .buy-btn {
-            background: var(--p); color: #000; border: none; padding: 12px;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem;
-            cursor: pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        .buy-button {
+            background: var(--primary);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.8rem;
             transition: 0.3s;
         }
-        .buy-btn:hover { background: #fff; transform: scale(1.05); }
+        .buy-button:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--primary); }
 
-        /* SOPORTE */
-        .support-card {
-            background: #25d366; color: #000; position: fixed; bottom: 30px; right: 30px;
-            width: 70px; height: 70px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 35px;
-            box-shadow: 0 0 30px rgba(37,211,102,0.5); z-index: 100;
+        /* WHATSAPP FLOAT */
+        .wa-float {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #25d366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 30px; color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;
         }
 
-        @keyframes powerOn { 0% { opacity: 0; filter: brightness(3); } 100% { opacity: 1; filter: brightness(1); } }
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-<div id="intro">
-    <h1 style="font-family:'Orbitron'; font-size:1.5rem; margin-bottom:30px; letter-spacing:10px;">ZETA HACKS V12</h1>
-    <button class="intro-btn" onclick="bootSystem()">ACCEDER AL SISTEMA</button>
-</div>
+<nav>
+    <div class="logo">ZETA</div>
+    <a href="https://wa.me/573001308078" class="support-link">SOPORTE TÉCNICO</a>
+</nav>
 
-<header>
-    <div class="brand">Zeta Hacks</div>
-    <div class="tagline">TIENDA OFICIAL DE SOFTWARE ELITE</div>
-</header>
-
-<div class="hud-bar">
-    <span>SYSTEM: ONLINE</span>
-    <span>SECURITY: ENC-V12</span>
-    <span id="timer">REGION: PENDING</span>
-</div>
-
-<div class="main-container">
-    <div id="view-countries" class="grid-view active">
-        <div class="countries" id="c-grid"></div>
+<div id="home-view">
+    <div class="hero">
+        <h1>Tienda Oficial Zeta</h1>
+        <p>Software de alto rendimiento para usuarios exigentes. Selecciona tu país para ver precios locales y métodos de pago disponibles.</p>
     </div>
 
-    <div id="view-store" class="grid-view">
-        <button onclick="backToMap()" style="background:none; border:none; color:var(--s); font-family:Orbitron; margin-bottom:30px; cursor:pointer;">&lt;&lt; VOLVER AL TERMINAL</button>
-        <h2 id="current-region" style="font-family:Orbitron; font-size:2.5rem; color:var(--p); margin-bottom:40px;"></h2>
-        <div id="p-list"></div>
+    <div class="container">
+        <h2 class="section-title">SELECCIONA TU REGIÓN</h2>
+        <div class="country-grid" id="country-grid"></div>
     </div>
 </div>
 
-<a href="https://wa.me/573001308078" class="support-card"><i class="fab fa-whatsapp"></i></a>
+<div id="store-view" class="container">
+    <button class="back-btn" onclick="showHome()"><i class="fa fa-arrow-left"></i> Volver a regiones</button>
+    <h1 id="selected-country" style="margin-bottom: 40px; font-family: 'Orbitron';"></h1>
+    
+    <div id="product-list"></div>
+</div>
+
+<a href="https://wa.me/573001308078" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
 <script>
 const DB = {
     paises: [
-        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:13, c:"BS"},
+        {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:14, c:"BS"},
         {n:"BRASIL", b:"🇧🇷", t:5.2, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
         {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
         {n:"ESPAÑA", b:"🇪🇸", t:1, c:"EUR"}, {n:"USA", b:"🇺🇸", t:1, c:"USD"},
@@ -147,87 +169,72 @@ const DB = {
         {n:"PERÚ", b:"🇵🇪", t:3.55, c:"PEN"}, {n:"DOMINICANA", b:"🇩🇴", t:70, c:"DOP"},
         {n:"VENEZUELA", b:"🇻🇪", t:550, c:"VES"}
     ],
-    prods: [
-        {cat:"ANDROID SOLUTIONS", items:[
-            {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"HG CHEATS", d:[1,10,30], p:[3,12,20]},
-            {n:"HG CHEATS + VIRTUAL", d:[1,10,30], p:[5,16,29]},
-            {n:"STRICK BR", d:[1,7,15,30], p:[3,8,12,19]},
-            {n:"STRICK BR + VIRTUAL", d:[1,7,15,30], p:[6,12,16,29]}
+    categorias: [
+        {nombre: "SOLUCIONES ANDROID", prods: [
+            {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,18]},
+            {n:"DRIP MOBILE ROOT", d:[1,7,15,30], p:[3,8,12,18]},
+            {n:"STRICK BR", d:[1,7,15,30], p:[3,8,12,19]}
         ]},
-        {cat:"IOS SOLUTIONS", items:[
-            {n:"CERTIFICADOS GBOX", d:["12 MESES"], p:[20]},
-            {n:"FLOURITE + GBOX", d:[1,7,30], p:[25,38,50]},
-            {n:"FLOURITE SOLO", d:[1,7,30], p:[5,16,28]},
-        {cat:"PC SOLUTIONS", items:[
-            {n:"CUBAN PANEL PC", d:[1,7,30,"PERMANENTE"], p:[3,8,16,30]},
+        {nombre: "SOLUCIONES IOS", prods: [
+            {n:"CERTIFICADOS GBOX (12 MESES)", d:["ACCESO"], p:[18]},
+            {n:"PANEL IOS", d:[7,30], p:[12,19]}
+        ]},
+        {nombre: "SOLUCIONES PC", prods: [
+            {n:"CUBAN PANEL PC", d:[1,7,30,"PERMANENTE"], p:[3,8,16,25]},
             {n:"BR MODS BYPASS", d:[1,10,30], p:[3,12,20]}
         ]}
     ]
 };
 
-const talk = (txt) => {
-    const synth = window.speechSynthesis;
-    const ut = new SpeechSynthesisUtterance(txt);
-    ut.lang = 'es-ES'; ut.rate = 0.95; ut.pitch = 0.8;
-    synth.speak(ut);
-};
-
-function bootSystem() {
-    document.getElementById('intro').style.display = 'none';
-    talk("Sistema Zeta Hacks iniciado. Bienvenido a la tienda oficial. Seleccione una región para ver los precios locales.");
-}
-
 function init() {
-    const grid = document.getElementById('c-grid');
+    const grid = document.getElementById('country-grid');
     DB.paises.sort((a,b)=>a.n.localeCompare(b.n)).forEach(p => {
-        const d = document.createElement('div'); d.className = 'country-box';
-        d.onclick = () => loadStore(p);
-        d.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
-        grid.appendChild(d);
+        const div = document.createElement('div');
+        div.className = 'country-card';
+        div.onclick = () => showStore(p);
+        div.innerHTML = `<span class="flag">${p.b}</span><span>${p.n}</span>`;
+        grid.appendChild(div);
     });
 }
 
-function loadStore(p) {
-    talk("Analizando precios para " + p.n);
-    document.getElementById('view-countries').classList.remove('active');
-    document.getElementById('view-store').classList.add('active');
-    document.getElementById('current-region').innerText = "REGION: " + p.n;
-    document.getElementById('timer').innerText = "REGION: " + p.n;
+function showStore(p) {
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('store-view').style.display = 'block';
+    document.getElementById('selected-country').innerText = "Catálogo " + p.n;
     window.scrollTo(0,0);
 
-    const container = document.getElementById('p-list');
-    container.innerHTML = '';
+    const list = document.getElementById('product-list');
+    list.innerHTML = '';
 
-    DB.prods.forEach(cat => {
-        container.innerHTML += `<h2 style="font-family:Orbitron; border-bottom:2px solid #222; padding-bottom:10px; margin-top:60px; color:#444;">${cat.cat}</h2>`;
-        cat.items.forEach(i => {
-            let rows = '';
+    DB.categorias.forEach(cat => {
+        let html = `<h2 class="section-title" style="margin-top:50px;">${cat.nombre}</h2><div class="product-grid">`;
+        cat.prods.forEach(i => {
+            let prices = '';
             i.d.forEach((d, idx) => {
-                let localPx = Math.ceil(i.p[idx] * p.t);
-                let tag = isNaN(d) ? d : d + " DÍAS";
-                rows += `
-                <div class="price-row">
-                    <span style="font-weight:700;">✅ ${tag}</span>
-                    <span class="p-price">${localPx.toLocaleString()} ${p.c}</span>
-                    <button class="buy-btn" onclick="order('${i.n}', '${tag}', '${localPx} ${p.c}')">REALIZAR ORDEN</button>
-                </div>`;
+                let localVal = Math.ceil(i.p[idx] * p.t);
+                let dur = isNaN(d) ? d : d + " DÍAS";
+                prices += `
+                    <div class="price-row">
+                        <div class="duration">${dur}</div>
+                        <div class="price-text">${localVal.toLocaleString()} ${p.c}</div>
+                        <button class="buy-button" onclick="buy('${i.n}','${dur}','${localVal} ${p.c}')">COMPRAR</button>
+                    </div>`;
             });
-            container.innerHTML += `<div class="product-item"><div class="product-header"><i class="fa fa-microchip" style="color:var(--p);"></i><h3>${i.n}</h3></div><div class="price-table">${rows}</div></div>`;
+            html += `<div class="product-card"><div class="product-info"><h3>${i.n}</h3>${prices}</div></div>`;
         });
+        html += `</div>`;
+        list.innerHTML += html;
     });
 }
 
-function order(name, dur, px) {
-    talk("Procesando pedido de " + name + ". Redirigiendo a soporte.");
-    const link = `https://wa.me/573001308078?text=🔱 *NUEVA ORDEN ZETA HACKS*%0A💎 PRODUCTO: ${name}%0A⏳ DURACIÓN: ${dur}%0A💰 PRECIO: ${px}`;
-    setTimeout(() => { window.open(link, '_blank'); }, 800);
+function buy(prod, dur, price) {
+    const msg = `Hola Ángel, deseo comprar:%0A💎 *Producto:* ${prod}%0A⏳ *Duración:* ${dur}%0A💰 *Precio:* ${price}`;
+    window.open(`https://wa.me/573001308078?text=${msg}`, '_blank');
 }
 
-function backToMap() {
-    document.getElementById('view-store').classList.remove('active');
-    document.getElementById('view-countries').classList.add('active');
+function showHome() {
+    document.getElementById('store-view').style.display = 'none';
+    document.getElementById('home-view').style.display = 'block';
 }
 
 init();
