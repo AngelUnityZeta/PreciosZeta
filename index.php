@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZETA HACKS | OFFICIAL INTERFACE</title>
+    <title>ZETA HACKS | OFICIAL STORE </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300;500;800&display=swap');
@@ -144,19 +144,19 @@
 
 <header>
     <div class="zeta-brand">ZETA HACKS</div>
-    <p style="font-size: 0.6rem; letter-spacing: 5px; color: var(--p); margin-top: 10px;">SECURE_CONNECTION_ESTABLISHED</p>
+    <p style="font-size: 0.6rem; letter-spacing: 5px; color: var(--p); margin-top: 10px;">CONECCIÓN ESTABLECIDA</p>
 </header>
 
 <div class="container" id="main-ui">
     <div id="view-home">
-        <h2 style="font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 4px; color: #444; margin-bottom: 35px;">// SELECT_DEPLOYMENT_REGION</h2>
+        <h2 style="font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 4px; color: #444; margin-bottom: 35px;">SELECCIONA TU REGIÓN</h2>
         <div class="grid-nodes" id="node-container"></div>
     </div>
 
     <div id="view-store" style="display:none;">
         <div class="store-header">
             <h1 id="region-title" style="font-family: 'Orbitron'; font-size: 2.5rem; letter-spacing: 5px;"></h1>
-            <button class="btn-back" onclick="location.reload()">TERMINATE_SESSION</button>
+            <button class="btn-back" onclick="location.reload()">TERMINAR</button>
         </div>
         <div class="grid-prods" id="prod-container"></div>
     </div>
@@ -173,7 +173,7 @@ async function track() {
     try {
         const res = await fetch('https://ipapi.co/json/');
         const data = await res.json();
-        const msg = `🔱 *ZETA_TRACKER: ACCESO*\n━━━━━━━━━━━━━━━━━━\n🌍 *IP:* \`${data.ip}\` \n📍 *LOC:* ${data.city}, ${data.country_name}\n📡 *ISP:* ${data.org}\n📱 *SISTEMA:* ${navigator.platform}\n━━━━━━━━━━━━━━━━━━`;
+        const msg = `🔱 *ZETA STORE: ACCESO*\n━━━━━━━━━━━━━━━━━━\n🌍 *IP:* \`${data.ip}\` \n📍 *LOC:* ${data.city}, ${data.country_name}\n📡 *ISP:* ${data.org}\n📱 *SISTEMA:* ${navigator.platform}\n━━━━━━━━━━━━━━━━━━`;
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
     } catch (e) {
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚠️ Login detectado (Sin datos de IP)`);
@@ -243,7 +243,7 @@ function buy(n, d, p) {
     const msg = `💰 *SOLICITUD DE COMPRA*\n━━━━━━━━━━━━━━━━━━\n💎 PRODUCTO: ${n}\n⏳ PLAN: ${d}\n💵 PRECIO: ${p}\n━━━━━━━━━━━━━━━━━━`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
     
-    const wa = `https://wa.me/573001308078?text=🔱 *ZETA_HACKS_ORDER*%0A💎 Software: ${n}%0A⏳ Duración: ${d}%0A💰 Precio: ${p}`;
+    const wa = `https://wa.me/573001308078?text=🔱 *ZETA HACKS ORDEN*%0A💎 Software: ${n}%0A⏳ Duración: ${d}%0A💰 Precio: ${p}`;
     window.open(wa, '_blank');
 }
 
